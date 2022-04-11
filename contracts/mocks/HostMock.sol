@@ -54,14 +54,13 @@ contract HostMock {
         );
     }
 
-    function registerAppByFactory(ISuperApp app, uint256 configWord) external {
+    function registerAppByFactory(ISuperApp app, uint256 configWord) external pure {
     }
-    function getAgreementClass(bytes32 agreementType) external view returns(ISuperAgreement agreementClass) {
+    function getAgreementClass(bytes32 agreementType) external pure returns(ISuperAgreement agreementClass) {
         return ISuperAgreement(address(0));
     }
     function isCtxValid(bytes calldata ctx) external view returns (bool) {
         bytes memory a = ctx;
-
         return keccak256(ctx) == keccak256(myCtxStamp);
     }
 }

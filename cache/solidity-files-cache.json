@@ -52,7 +52,7 @@
       ]
     },
     "/Users/logic/superfluid/ul-integration/node_modules/@openzeppelin/contracts/proxy/utils/Initializable.sol": {
-      "lastModificationDate": 1649666264111,
+      "lastModificationDate": 1649666511742,
       "contentHash": "16c039b1a7b7e924214b44f577e3c636",
       "sourceName": "@openzeppelin/contracts/proxy/utils/Initializable.sol",
       "solcConfig": {
@@ -96,7 +96,7 @@
       ]
     },
     "/Users/logic/superfluid/ul-integration/node_modules/@superfluid-finance/ethereum-contracts/contracts/interfaces/superfluid/ISuperfluid.sol": {
-      "lastModificationDate": 1649666265362,
+      "lastModificationDate": 1649666513325,
       "contentHash": "741c5bf7054694d8564c45169b1def4a",
       "sourceName": "@superfluid-finance/ethereum-contracts/contracts/interfaces/superfluid/ISuperfluid.sol",
       "solcConfig": {
@@ -149,7 +149,7 @@
       ]
     },
     "/Users/logic/superfluid/ul-integration/node_modules/@superfluid-finance/ethereum-contracts/contracts/apps/CFAv1Library.sol": {
-      "lastModificationDate": 1649666264231,
+      "lastModificationDate": 1649666513296,
       "contentHash": "b68ebaea4eb0cfd91e3f60799ff41d60",
       "sourceName": "@superfluid-finance/ethereum-contracts/contracts/apps/CFAv1Library.sol",
       "solcConfig": {
@@ -194,7 +194,7 @@
       ]
     },
     "/Users/logic/superfluid/ul-integration/node_modules/@superfluid-finance/ethereum-contracts/contracts/interfaces/agreements/IConstantFlowAgreementV1.sol": {
-      "lastModificationDate": 1649666265361,
+      "lastModificationDate": 1649666513323,
       "contentHash": "c8f705887e3c3cc01f84842b070945b1",
       "sourceName": "@superfluid-finance/ethereum-contracts/contracts/interfaces/agreements/IConstantFlowAgreementV1.sol",
       "solcConfig": {
@@ -239,7 +239,7 @@
       ]
     },
     "/Users/logic/superfluid/ul-integration/node_modules/@superfluid-finance/ethereum-contracts/contracts/apps/SuperAppBase.sol": {
-      "lastModificationDate": 1649666264231,
+      "lastModificationDate": 1649666513328,
       "contentHash": "4ad2109d5a8003eca4b9a792c863bc87",
       "sourceName": "@superfluid-finance/ethereum-contracts/contracts/apps/SuperAppBase.sol",
       "solcConfig": {
@@ -367,7 +367,7 @@
       ]
     },
     "/Users/logic/superfluid/ul-integration/node_modules/@openzeppelin/contracts/utils/Address.sol": {
-      "lastModificationDate": 1649666262214,
+      "lastModificationDate": 1649666511234,
       "contentHash": "ad714a6368ee7d43cded6bbe8af0b155",
       "sourceName": "@openzeppelin/contracts/utils/Address.sol",
       "solcConfig": {
@@ -409,7 +409,7 @@
       ]
     },
     "/Users/logic/superfluid/ul-integration/node_modules/@superfluid-finance/ethereum-contracts/contracts/interfaces/superfluid/ISuperfluidGovernance.sol": {
-      "lastModificationDate": 1649666265362,
+      "lastModificationDate": 1649666513325,
       "contentHash": "1b5a6cd4e7f9b5b33c42261db07c29ef",
       "sourceName": "@superfluid-finance/ethereum-contracts/contracts/interfaces/superfluid/ISuperfluidGovernance.sol",
       "solcConfig": {
@@ -456,7 +456,7 @@
       ]
     },
     "/Users/logic/superfluid/ul-integration/node_modules/@superfluid-finance/ethereum-contracts/contracts/interfaces/superfluid/ISuperfluidToken.sol": {
-      "lastModificationDate": 1649666265362,
+      "lastModificationDate": 1649666513325,
       "contentHash": "6af8c46981c33eb2f13b7aac2bf34e7a",
       "sourceName": "@superfluid-finance/ethereum-contracts/contracts/interfaces/superfluid/ISuperfluidToken.sol",
       "solcConfig": {
@@ -500,7 +500,7 @@
       ]
     },
     "/Users/logic/superfluid/ul-integration/node_modules/@superfluid-finance/ethereum-contracts/contracts/interfaces/superfluid/ISuperToken.sol": {
-      "lastModificationDate": 1649666265362,
+      "lastModificationDate": 1649666513325,
       "contentHash": "dbcf2ee0a785e2ec1f4725e8a69ea806",
       "sourceName": "@superfluid-finance/ethereum-contracts/contracts/interfaces/superfluid/ISuperToken.sol",
       "solcConfig": {
@@ -548,7 +548,7 @@
       ]
     },
     "/Users/logic/superfluid/ul-integration/node_modules/@superfluid-finance/ethereum-contracts/contracts/interfaces/superfluid/ISuperTokenFactory.sol": {
-      "lastModificationDate": 1649666265362,
+      "lastModificationDate": 1649666513326,
       "contentHash": "78c9d7e553510ba136ebafc2dab49f84",
       "sourceName": "@superfluid-finance/ethereum-contracts/contracts/interfaces/superfluid/ISuperTokenFactory.sol",
       "solcConfig": {
@@ -593,7 +593,7 @@
       ]
     },
     "/Users/logic/superfluid/ul-integration/node_modules/@superfluid-finance/ethereum-contracts/contracts/interfaces/superfluid/ISuperAgreement.sol": {
-      "lastModificationDate": 1649666265362,
+      "lastModificationDate": 1649666513325,
       "contentHash": "2d64c005180c737dcb5206fb199ee410",
       "sourceName": "@superfluid-finance/ethereum-contracts/contracts/interfaces/superfluid/ISuperAgreement.sol",
       "solcConfig": {
@@ -637,7 +637,7 @@
       ]
     },
     "/Users/logic/superfluid/ul-integration/node_modules/@superfluid-finance/ethereum-contracts/contracts/interfaces/superfluid/ISuperApp.sol": {
-      "lastModificationDate": 1649666265362,
+      "lastModificationDate": 1649666513325,
       "contentHash": "14173bc1970975d856a048a5cda11e6f",
       "sourceName": "@superfluid-finance/ethereum-contracts/contracts/interfaces/superfluid/ISuperApp.sol",
       "solcConfig": {
@@ -681,7 +681,7 @@
       ]
     },
     "/Users/logic/superfluid/ul-integration/node_modules/@superfluid-finance/ethereum-contracts/contracts/interfaces/superfluid/Definitions.sol": {
-      "lastModificationDate": 1649666265362,
+      "lastModificationDate": 1649666513297,
       "contentHash": "65cc697f08e0b765dde9d7e0c1761ddf",
       "sourceName": "@superfluid-finance/ethereum-contracts/contracts/interfaces/superfluid/Definitions.sol",
       "solcConfig": {
@@ -726,7 +726,7 @@
       ]
     },
     "/Users/logic/superfluid/ul-integration/node_modules/@superfluid-finance/ethereum-contracts/contracts/interfaces/tokens/TokenInfo.sol": {
-      "lastModificationDate": 1649666265362,
+      "lastModificationDate": 1649666513332,
       "contentHash": "fe802041bd6b048d85da932320da4798",
       "sourceName": "@superfluid-finance/ethereum-contracts/contracts/interfaces/tokens/TokenInfo.sol",
       "solcConfig": {
@@ -768,7 +768,7 @@
       ]
     },
     "/Users/logic/superfluid/ul-integration/node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol": {
-      "lastModificationDate": 1649666264110,
+      "lastModificationDate": 1649666511691,
       "contentHash": "a44d1a099633876550ad2476b21bafbe",
       "sourceName": "@openzeppelin/contracts/token/ERC20/IERC20.sol",
       "solcConfig": {
@@ -810,7 +810,7 @@
       ]
     },
     "/Users/logic/superfluid/ul-integration/node_modules/@openzeppelin/contracts/token/ERC777/IERC777.sol": {
-      "lastModificationDate": 1649666264110,
+      "lastModificationDate": 1649666511725,
       "contentHash": "577d03e8d175b2f807063648ac4302ad",
       "sourceName": "@openzeppelin/contracts/token/ERC777/IERC777.sol",
       "solcConfig": {
@@ -852,7 +852,7 @@
       ]
     },
     "/Users/logic/superfluid/ul-integration/node_modules/@superfluid-finance/ethereum-contracts/contracts/interfaces/tokens/ERC20WithTokenInfo.sol": {
-      "lastModificationDate": 1649666265362,
+      "lastModificationDate": 1649666513298,
       "contentHash": "f9a398f500009c0b16a69e0521170429",
       "sourceName": "@superfluid-finance/ethereum-contracts/contracts/interfaces/tokens/ERC20WithTokenInfo.sol",
       "solcConfig": {
@@ -897,8 +897,8 @@
       ]
     },
     "/Users/logic/superfluid/ul-integration/contracts/mocks/HostMock.sol": {
-      "lastModificationDate": 1649665827038,
-      "contentHash": "197860f979f1961ef8b24e8130d8e7b8",
+      "lastModificationDate": 1649667819308,
+      "contentHash": "cc202d15e659b57b2cb284d7cfa0dbf6",
       "sourceName": "contracts/mocks/HostMock.sol",
       "solcConfig": {
         "version": "0.8.13",
@@ -1035,7 +1035,7 @@
       ]
     },
     "/Users/logic/superfluid/ul-integration/node_modules/@openzeppelin/contracts/proxy/Clones.sol": {
-      "lastModificationDate": 1649666262216,
+      "lastModificationDate": 1649666511274,
       "contentHash": "f741efede98f234458f02f818f80c7f3",
       "sourceName": "@openzeppelin/contracts/proxy/Clones.sol",
       "solcConfig": {
