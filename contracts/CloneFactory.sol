@@ -4,6 +4,8 @@ pragma solidity 0.8.13;
 import {ISuperfluid, SuperAppDefinitions, ISuperApp} from "@superfluid-finance/ethereum-contracts/contracts/interfaces/superfluid/ISuperfluid.sol";
 import {Clones} from "@openzeppelin/contracts/proxy/Clones.sol";
 import {AppLogic} from "./AppLogic.sol";
+//import {AppLogic2} from "./AppLogic2.sol";
+//import {AppLogic3} from "./AppLogic3.sol";
 import {Errors} from "./libs/Errors.sol";
 
 //open ownable
@@ -13,9 +15,7 @@ contract CloneFactory {
     event NewAppLogic(address indexed newApp, address host, address indexed acceptedToken, address indexed locker, uint96 minFlowRate);
 
     uint256 immutable configWord = SuperAppDefinitions.APP_LEVEL_FINAL |
-    SuperAppDefinitions.BEFORE_AGREEMENT_CREATED_NOOP |
-    SuperAppDefinitions.BEFORE_AGREEMENT_UPDATED_NOOP |
-    SuperAppDefinitions.BEFORE_AGREEMENT_TERMINATED_NOOP;
+    SuperAppDefinitions.BEFORE_AGREEMENT_CREATED_NOOP;
 
     address public owner;
     AppLogic public appLogicImplementation;

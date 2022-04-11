@@ -9,7 +9,7 @@ import {SuperAppBase} from "@superfluid-finance/ethereum-contracts/contracts/app
 import {ILocker} from "./interfaces/ILocker.sol";
 import {Errors} from "./libs/Errors.sol";
 
-contract AppLogic is SuperAppBase, Initializable {
+contract AppLogic3 is SuperAppBase, Initializable {
 
     using CFAv1Library for CFAv1Library.InitData;
 
@@ -22,6 +22,7 @@ contract AppLogic is SuperAppBase, Initializable {
     uint96 public minFlowRate;
     ILocker public locker;
     bytes32 constant public cfaID = keccak256("org.superfluid-finance.agreements.ConstantFlowAgreement.v1");
+    mapping(address => int96) private _outFlows;
 
     function initialize(
         address _host,
@@ -54,7 +55,7 @@ contract AppLogic is SuperAppBase, Initializable {
     function afterAgreementCreated(
         ISuperToken superToken,
         address agreementClass,
-        bytes32 agreementId,
+        bytes32, // agreementId,
         bytes calldata agreementData,
         bytes calldata, // cbdata,
         bytes calldata ctx
@@ -67,48 +68,26 @@ contract AppLogic is SuperAppBase, Initializable {
     returns (bytes memory newCtx)
     {
         (address sender,) = abi.decode(agreementData, (address, address));
-        (int96 flowRate, ) = _getFlowRateByID(agreementId);
+        int96 flowRate = _getFlowRate(sender);
         if(uint96(flowRate) < minFlowRate) revert Errors.LowFlowRate();
-        newCtx = _increaseFlowBy(_min(
-                flowRate,
-                cfa.getMaximumFlowRateFromDeposit(
-                    acceptedToken,
-                    host.decodeCtx(ctx).appAllowanceGranted
-                )
-            ),ctx);
+        int96 outFlow = _min(
+            flowRate,
+            cfa.getMaximumFlowRateFromDeposit(
+                acceptedToken,
+                host.decodeCtx(ctx).appAllowanceGranted
+            )
+        );
+        _outFlows[sender] = outFlow;
+        newCtx = _increaseFlowBy(outFlow,ctx);
         locker.grantKey(sender, flowRate);
-    }
-
-    function beforeAgreementUpdated(
-        ISuperToken /*superToken*/,
-        address /*agreementClass*/,
-        bytes32 agreementId,
-        bytes calldata agreementData,
-        bytes calldata ctx
-    )
-    external
-    view
-    virtual
-    override
-    returns (bytes memory cbdata)
-    {
-        //gets how much our outgoing flow is affectd by this user before update
-        (int96 flowRate, uint256 owedDeposit) = _getFlowRateByID(agreementId);
-        return abi.encode(_min(
-                flowRate,
-                cfa.getMaximumFlowRateFromDeposit(
-                    acceptedToken,
-                    owedDeposit
-                )
-            ));
     }
 
     function afterAgreementUpdated(
         ISuperToken superToken,
         address agreementClass,
-        bytes32 agreementId,
+        bytes32, //agreementId,
         bytes calldata agreementData,
-        bytes calldata cbdata,
+        bytes calldata, //cbdata,
         bytes calldata ctx
     )
     external override
@@ -117,47 +96,23 @@ contract AppLogic is SuperAppBase, Initializable {
     onlyHost
     returns (bytes memory newCtx)
     {
-        int96 maxOldFlow = abi.decode(cbdata, (int96));
-        (int96 newFlowRate, ) = _getFlowRateByID(agreementId);
+        (address sender,) = abi.decode(agreementData, (address, address));
+        int96 newFlowRate = _getFlowRate(sender);
         if(uint96(newFlowRate) < minFlowRate) revert Errors.LowFlowRate();
-        //gets how much our outgoing flow should be affect by this user after update
         int96 maxAllowedFlowRate = _min(
             newFlowRate,
             cfa.getMaximumFlowRateFromDeposit(
                 acceptedToken,
-                    host.decodeCtx(ctx).appAllowanceGranted
+                host.decodeCtx(ctx).appAllowanceGranted
             )
         );
-
-        if(maxOldFlow > maxAllowedFlowRate) {
-            return _reduceFlowBy(maxOldFlow - maxAllowedFlowRate, ctx);
+        int96 outFlow = _outFlows[sender];
+        _outFlows[sender] = maxAllowedFlowRate;
+        if(outFlow > maxAllowedFlowRate) {
+            return _reduceFlowBy(outFlow - maxAllowedFlowRate, ctx);
         } else {
-            return _increaseFlowBy(maxAllowedFlowRate - maxOldFlow, ctx);
+            return _increaseFlowBy(maxAllowedFlowRate - outFlow, ctx);
         }
-    }
-
-    function beforeAgreementTerminated(
-        ISuperToken /*superToken*/,
-        address /*agreementClass*/,
-        bytes32 agreementId,
-        bytes calldata agreementData,
-        bytes calldata /*ctx*/
-    )
-    external
-    view
-    virtual
-    override
-    returns (bytes memory cbdata)
-    {
-        //gets how much our outgoing flow is affect by this user before termination
-        (int96 flowRate, uint256 owedDeposit) = _getFlowRateByID(agreementId);
-        return abi.encode(_min(
-                flowRate,
-                cfa.getMaximumFlowRateFromDeposit(
-                    acceptedToken,
-                    owedDeposit
-                )
-            ));
     }
 
     function afterAgreementTerminated(
@@ -165,7 +120,7 @@ contract AppLogic is SuperAppBase, Initializable {
         address agreementClass,
         bytes32, //agreementId,
         bytes calldata agreementData,
-        bytes calldata cbdata,
+        bytes calldata,// cbdata,
         bytes calldata ctx
     ) external
     override
@@ -174,17 +129,18 @@ contract AppLogic is SuperAppBase, Initializable {
     {
         if (!_isCtxValid(ctx) || !_isSameToken(superToken) || !_isCFAv1(agreementClass) )
             return ctx;
-        int96 maxOldFlow = abi.decode(cbdata, (int96));
-        newCtx = _reduceFlowBy(maxOldFlow, ctx);
         (address sender,) = abi.decode(agreementData, (address, address));
+        int96 outFlow = _outFlows[sender];
+        delete _outFlows[sender];
+        newCtx = _reduceFlowBy(outFlow, ctx);
         try locker.cancelAndRefund(sender) {
         } catch {
             emit LockerCloseNotificationFailed(address(locker));
         }
     }
 
-    function _getFlowRateByID(bytes32 agreementId) internal view returns(int96 flowRate, uint256 owedDeposit) {
-        (,flowRate , ,owedDeposit) = cfa.getFlowByID(acceptedToken, agreementId);
+    function _getFlowRate(address sender) internal view returns(int96 flowRate) {
+        (, flowRate , ,) = cfa.getFlow(acceptedToken, sender, address(this));
     }
 
     //reduce outgoing stream, close stream if needed
