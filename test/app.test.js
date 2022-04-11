@@ -106,7 +106,7 @@ const updateStreamWithCheck = async (account, receiver, lockerAddress, flowRate)
   );
   const flowUserToApp = await getFlowRate(account.address, receiver);
   const flowAppToLocker = await getFlowRate(receiver, lockerAddress);
-  assert.equal(flowUserToApp.flowRate, flowRate, "sender not streaming");
+  assert.equal(flowUserToApp.flowRate, flowRate, "sender not streaming right amount");
   assert.notEqual(flowAppToLocker.flowRate, "0", "locker not receiving stream");
   return {
     fromSender: flowUserToApp,
@@ -181,6 +181,7 @@ describe("AppLogic", function () {
     await advTime();
     console.log("RTB 🤖 : ", await getRTB(app.address));
     console.log(await deleteStreamWithCheck(env.accounts[0], app.address, locker.address));
+    await expectNoOutgoingStream(app.address, locker.address);
   });
   it("#2 - multi stream to App then delete it", async () => {
     const locker = await env.factories.locker.deploy();
@@ -220,6 +221,7 @@ describe("AppLogic", function () {
       "0",
       "stream to locker should be zero"
     );
+    await expectNoOutgoingStream(app.address, locker.address);
   });
   it("#3 - create/update x2 and then delete it", async () => {
     const locker = await env.factories.locker.deploy();
@@ -235,37 +237,12 @@ describe("AppLogic", function () {
       "100000000"
     );
     await advTime();
-    await updateStreamWithCheck(env.accounts[0], app.address, locker.address, "500000");
-    let flowUserToApp = await getFlowRate(env.accounts[0].address, app.address);
-    let flowAppToLocker = await getFlowRate(app.address, locker.address);
-    console.log(flowUserToApp);
-    console.log(flowAppToLocker);
-    assert.equal(
-      flowUserToApp.flowRate,
-      "500000",
-      "updated user to app - wrong flowRate"
-    );
-    await updateStreamWithCheck(env.accounts[0], app.address, locker.address,"600000000");
-    flowUserToApp = await getFlowRate(env.accounts[0].address, app.address);
-    flowAppToLocker = await getFlowRate(app.address, locker.address);
-    console.log(flowUserToApp);
-    console.log(flowAppToLocker);
-    assert.equal(
-      flowUserToApp.flowRate,
-      "600000000",
-      "updated user to app - wrong flowRate"
-    );
-
-    await deleteStreamWithCheck(env.accounts[0], app.address, locker.address);
-    flowUserToApp = await getFlowRate(env.accounts[0].address, app.address);
-    flowAppToLocker = await getFlowRate(app.address, locker.address);
-    console.log(flowUserToApp);
-    console.log(flowAppToLocker);
-    await expectNoOutgoingStream(env.accounts[0].address, app.address);
-    assert.notOk(
-      await isAppJailed(app.address),
-      "app jailed - after deleting stream"
-    );
+    console.log(await updateStreamWithCheck(env.accounts[0], app.address, locker.address, "500000"));
+    await advTime();
+    console.log(await updateStreamWithCheck(env.accounts[0], app.address, locker.address,"600000000"));
+    await advTime();
+    console.log(await deleteStreamWithCheck(env.accounts[0], app.address, locker.address));
+    await expectNoOutgoingStream(app.address, locker.address);
   });
   it("#x - create-multi updates and then delete it", async () => {
     const locker = await env.factories.locker.deploy();
@@ -288,12 +265,8 @@ describe("AppLogic", function () {
     console.log(await updateStreamWithCheck(env.accounts[0], app.address, locker.address,"100000000"));
     console.log(await updateStreamWithCheck(env.accounts[0], app.address, locker.address, "1000"));
     console.log(await updateStreamWithCheck(env.accounts[0], app.address, locker.address,"100000000"));
-    await deleteStreamWithCheck(env.accounts[0], app.address, locker.address);
-    const flowUserToApp = await getFlowRate(env.accounts[0].address, app.address);
-    const flowAppToLocker = await getFlowRate(app.address, locker.address);
-    console.log(flowUserToApp);
-    console.log(flowAppToLocker);
-    await expectNoOutgoingStream(env.accounts[0].address, app.address);
+    console.log(await deleteStreamWithCheck(env.accounts[0], app.address, locker.address));
+    await expectNoOutgoingStream(app.address, locker.address);
   });
   it("#4 - should not jailed if locker revert on termination callback", async () => {
     const locker = await env.factories.locker.deploy();
@@ -303,38 +276,16 @@ describe("AppLogic", function () {
       locker.address,
       1000
     );
-    await createStreamWithCheck(
+    console.log(await createStreamWithCheck(
       env.accounts[0],
       app.address,
       locker.address,
       "100000000"
-    );
-    let flowUserToApp = await getFlowRate(env.accounts[0].address, app.address);
-    let flowAppToLocker = await getFlowRate(app.address, locker.address);
-    assert.notEqual(
-      flowAppToLocker.flowRate,
-      "0",
-      "locker not receiving stream"
-    );
+    ));
     await advTime();
-    console.log(flowUserToApp);
-    console.log(flowAppToLocker);
-    assert.equal(
-      flowUserToApp.flowRate,
-      "100000000",
-      "user to app - wrong flowRate"
-    );
-    assert.equal(
-      flowUserToApp.owedDeposit,
-      flowAppToLocker.deposit,
-      "user owedDeposit should be deposit of app"
-    );
     console.log("RTB 🤖 : ", await getRTB(app.address));
-    await deleteStreamWithCheck(env.accounts[0], app.address, locker.address);
-    flowUserToApp = await getFlowRate(env.accounts[0].address, app.address);
-    flowAppToLocker = await getFlowRate(app.address, locker.address);
-    console.log(flowUserToApp);
-    console.log(flowAppToLocker);
+    console.log(await deleteStreamWithCheck(env.accounts[0], app.address, locker.address));
+    await expectNoOutgoingStream(app.address, locker.address);
   });
   it("#5 - small value streams should revert", async () => {
     const locker = await env.factories.locker.deploy();
@@ -398,12 +349,8 @@ describe("AppLogic", function () {
     await advTime();
     console.log(await updateStreamWithCheck(env.accounts[0], app.address, locker.address,"1"));
     await advTime();
-    await deleteStreamWithCheck(env.accounts[0], app.address, locker.address);
-    const flowUserToApp = await getFlowRate(env.accounts[0].address, app.address);
-    const flowAppToLocker = await getFlowRate(app.address, locker.address);
-    console.log(flowUserToApp);
-    console.log(flowAppToLocker);
-    await expectNoOutgoingStream(env.accounts[0].address, app.address);
+    console.log(await deleteStreamWithCheck(env.accounts[0], app.address, locker.address));
+    await expectNoOutgoingStream(app.address, locker.address);
   });
   it("#x - very low multi accounts stream values", async() => {
     const locker = await env.factories.locker.deploy();
@@ -438,9 +385,6 @@ describe("AppLogic", function () {
     console.log(await getFlowRate(env.accounts[1].address, app.address));
     console.log(await getFlowRate(env.accounts[2].address, app.address));
     console.log(await getFlowRate(app.address, locker.address));
-    await expectNoOutgoingStream(env.accounts[0].address, app.address);
-    await expectNoOutgoingStream(env.accounts[1].address, app.address);
-    await expectNoOutgoingStream(env.accounts[2].address, app.address);
     await expectNoOutgoingStream(app.address, locker.address);
   });
 });
