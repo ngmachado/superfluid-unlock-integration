@@ -1,0 +1,3 @@
+module.exports = {
+  skipFiles: ['contracts/interfaces/*.sol', 'contracts/mocks/*.sol']
+};
