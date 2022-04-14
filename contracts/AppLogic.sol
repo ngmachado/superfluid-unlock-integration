@@ -66,8 +66,7 @@ contract AppLogic is SuperAppBase, Initializable {
         bytes calldata, // cbdata,
         bytes calldata ctx
     )
-    external
-    override
+    external override
     onlyHost
     validCtx(ctx)
     onlyExpected(superToken, agreementClass)
@@ -87,10 +86,8 @@ contract AppLogic is SuperAppBase, Initializable {
         bytes calldata agreementData,
         bytes calldata ctx
     )
-    external
+    external override
     view
-    virtual
-    override
     returns (bytes memory cbdata)
     {
         return abi.encode(_clip96x32(_getFlowRateByID(agreementId)));
@@ -105,9 +102,9 @@ contract AppLogic is SuperAppBase, Initializable {
         bytes calldata ctx
     )
     external override
+    onlyHost
     validCtx(ctx)
     onlyExpected(superToken, agreementClass)
-    onlyHost
     returns (bytes memory newCtx)
     {
         int96 clippedOldFlowRate = abi.decode(cbdata, (int96));
@@ -122,18 +119,20 @@ contract AppLogic is SuperAppBase, Initializable {
     }
 
     function beforeAgreementTerminated(
-        ISuperToken /*superToken*/,
-        address /*agreementClass*/,
+        ISuperToken superToken,
+        address agreementClass,
         bytes32 agreementId,
         bytes calldata /*agreementData*/,
-        bytes calldata /*ctx*/
+        bytes calldata ctx
     )
     external
     view
-    virtual
     override
+    onlyHost
     returns (bytes memory cbdata)
     {
+        if (!_isCtxValid(ctx) || !_isSameToken(superToken) || !_isCFAv1(agreementClass) )
+            return "";
         return abi.encode(_clip96x32(_getFlowRateByID(agreementId)));
     }
 
@@ -144,8 +143,8 @@ contract AppLogic is SuperAppBase, Initializable {
         bytes calldata agreementData,
         bytes calldata cbdata,
         bytes calldata ctx
-    ) external
-    override
+    )
+    external override
     onlyHost
     returns (bytes memory newCtx)
     {
