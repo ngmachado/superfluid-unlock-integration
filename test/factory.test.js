@@ -1,6 +1,6 @@
 const { assert } = require("chai");
 const { ethers } = require("hardhat");
-const { ZERO_ADDRESS, MIN_FLOWRATE, CFA_ID } = require("./utils/constants");
+const { ZERO_ADDRESS, MIN_FLOWRATE } = require("./utils/constants");
 const { deployTestEnv } = require("./utils/setTestEnv");
 const f = require("./utils/helperFuncs");
 let env;
@@ -24,19 +24,19 @@ describe("Factory", function () {
         env,
         env.tokens.daix.address,
         locker.address,
-        0,
+        MIN_FLOWRATE,
         ZERO_ADDRESS
       ),
       "HostRequired()"
     );
     assert.ok(rightError);
     rightError = await f.expectedRevert(
-      f.deployNewClone(env, ZERO_ADDRESS, locker.address, 0),
+      f.deployNewClone(env, ZERO_ADDRESS, locker.address, MIN_FLOWRATE),
       "SuperTokenRequired()"
     );
     assert.ok(rightError);
     rightError = await f.expectedRevert(
-      f.deployNewClone(env, env.tokens.daix.address, ZERO_ADDRESS, 0),
+      f.deployNewClone(env, env.tokens.daix.address, ZERO_ADDRESS, MIN_FLOWRATE),
       "LockerRequired()"
     );
     assert.ok(rightError);
