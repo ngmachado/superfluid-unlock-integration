@@ -13,8 +13,8 @@ before(async function () {
   await f.mintAndUpgrade(env, env.accounts[2]);
 });
 
-describe("AppLogic", function () {
-  it("#1 - start stream to App then delete it", async () => {
+describe("🧑‍🏭 AppLogic - Operations️", function () {
+  it("#1.1 - (single sender) start stream to App then delete it", async () => {
     const locker = await env.factories.locker.deploy();
     const { app } = await f.deployNewClone(
       env,
@@ -42,7 +42,41 @@ describe("AppLogic", function () {
     await f.expectNoOutgoingStream(env, app.address, locker.address);
     await f.withdrawDustMoney(env, app, locker.address);
   });
-  it("#2 - multi stream to App then delete it", async () => {
+  it("#1.2 - (single sender) create/update x2 and then delete it", async () => {
+    const locker = await env.factories.locker.deploy();
+    const { app } = await f.deployNewClone(
+      env,
+      env.tokens.daix.address,
+      locker.address,
+      MIN_FLOWRATE
+    );
+    await f.createStreamWithCheck(
+      env,
+      env.accounts[0],
+      app.address,
+      locker.address,
+      MIN_FLOWRATE,
+      consolePrint
+    );
+    await f.advTime();
+    await f.multiUpdateStreamWithCheck(
+      env,
+      env.accounts[0],
+      app.address,
+      locker.address,
+      ["5000000000000", "6000000000000"],
+      consolePrint
+    );
+    await f.deleteStreamWithCheck(
+      env,
+      env.accounts[0],
+      app.address,
+      locker.address,
+      consolePrint
+    );
+    await f.expectNoOutgoingStream(env, app.address, locker.address);
+  });
+  it("#1.3 - (multi senders) stream to App then delete it", async () => {
     const locker = await env.factories.locker.deploy();
     const { app } = await f.deployNewClone(
       env,
@@ -98,41 +132,7 @@ describe("AppLogic", function () {
     );
     await f.expectNoOutgoingStream(env, app.address, locker.address);
   });
-  it("#3 - create/update x2 and then delete it", async () => {
-    const locker = await env.factories.locker.deploy();
-    const { app } = await f.deployNewClone(
-      env,
-      env.tokens.daix.address,
-      locker.address,
-      MIN_FLOWRATE
-    );
-    await f.createStreamWithCheck(
-      env,
-      env.accounts[0],
-      app.address,
-      locker.address,
-      MIN_FLOWRATE,
-      consolePrint
-    );
-    await f.advTime();
-    await f.multiUpdateStreamWithCheck(
-      env,
-      env.accounts[0],
-      app.address,
-      locker.address,
-      ["5000000000000", "6000000000000"],
-      consolePrint
-    );
-    await f.deleteStreamWithCheck(
-      env,
-      env.accounts[0],
-      app.address,
-      locker.address,
-      consolePrint
-    );
-    await f.expectNoOutgoingStream(env, app.address, locker.address);
-  });
-  it("#x - multi updates and then delete it (small flows)", async () => {
+  it("#1.4 - (multi senders) create/updates and then delete it (small flows)", async () => {
     const locker = await env.factories.locker.deploy();
     const { app } = await f.deployNewClone(
       env,
@@ -174,7 +174,7 @@ describe("AppLogic", function () {
     );
     await f.expectNoOutgoingStream(env, app.address, locker.address);
   });
-  it("#x - multi updates and then delete it", async () => {
+  it("#1.5 - (multi senders) create/updates and then delete it ", async () => {
     const locker = await env.factories.locker.deploy();
     const { app } = await f.deployNewClone(
       env,
@@ -215,7 +215,10 @@ describe("AppLogic", function () {
     );
     await f.expectNoOutgoingStream(env, app.address, locker.address);
   });
-  it("#4 - should not jailed if locker revert on termination callback", async () => {
+});
+
+describe("🚨 AppLogic - Reverts", function () {
+  it("#2.1 - should not jailed if locker revert on termination callback", async () => {
     const locker = await env.factories.locker.deploy();
     await locker.setReverts(false, true);
     const { app } = await f.deployNewClone(
@@ -244,7 +247,7 @@ describe("AppLogic", function () {
 
     await f.expectNoOutgoingStream(env, app.address, locker.address);
   });
-  it("#5 - flows to small should revert", async () => {
+  it("#2.2 - flows to small should revert", async () => {
     const locker = await env.factories.locker.deploy();
     const { app } = await f.deployNewClone(
       env,
@@ -266,7 +269,7 @@ describe("AppLogic", function () {
     );
     assert.ok(rightError);
   });
-  it("#6 - updating to small streams should revert", async () => {
+  it("#2.3 - updating to small streams should revert", async () => {
     const locker = await env.factories.locker.deploy();
     const { app } = await f.deployNewClone(
       env,
@@ -302,8 +305,8 @@ describe("AppLogic", function () {
   });
 });
 
-describe("AppLogic - Random Walk", function () {
-  it("#1 - random walk updates", async () => {
+describe("⌛️ AppLogic - Random Walk", function () {
+  it("#3.1 - random walk updates", async () => {
     const locker = await env.factories.locker.deploy();
     await f.mintAndUpgrade(env, env.accounts[0], "10000");
     const { app } = await f.deployNewClone(
@@ -348,4 +351,4 @@ describe("AppLogic - Random Walk", function () {
     await f.expectNoOutgoingStream(env, app.address, locker.address);
     await f.withdrawDustMoney(env, app, locker.address);
   });
-})
+});

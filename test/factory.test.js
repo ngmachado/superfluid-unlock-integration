@@ -16,8 +16,8 @@ before(async function () {
   env = await deployTestEnv();
 });
 
-describe("Factory", function () {
-  it("#1 - deploy app from Factory", async () => {
+describe("⏬ Factory - Deployments", function () {
+  it("#1.1 - deploy app from Factory", async () => {
     const locker = await env.factories.locker.deploy();
     let rightError = await f.expectedRevert(
       f.deployNewClone(
@@ -57,7 +57,7 @@ describe("Factory", function () {
       MIN_FLOWRATE
     );
   });
-  it("#1.1 - deploy app and re-run initialize", async () => {
+  it("#1.2 - deploy app and re-run initialize", async () => {
     const locker = await env.factories.locker.deploy();
     const { app } = await f.deployNewClone(
       env,
@@ -76,7 +76,7 @@ describe("Factory", function () {
     );
     assert.ok(rightError);
   });
-  it("#1.2 - revert of not owner of factory", async () => {
+  it("#1.3 - revert of not owner of factory", async () => {
     const locker = await env.factories.locker.deploy();
     const rightError = await f.expectedRevert(
       f.deployNewClone(
@@ -91,6 +91,9 @@ describe("Factory", function () {
     );
     assert.ok(rightError);
   });
+});
+
+describe("📣 Factory - Callbacks checks", function() {
   it("#2.1 - Callback from wrong host (afterAgreementCreated)", async () => {
     const locker = await env.factories.locker.deploy();
     const { app } = await f.deployNewClone(
