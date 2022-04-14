@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/Users/logic/superfluid/ul-integration/contracts/AppLogic.sol": {
-      "lastModificationDate": 1649952640337,
-      "contentHash": "c67d193829cfeb62164aa747f1be052c",
+      "lastModificationDate": 1649953673413,
+      "contentHash": "8401618213821f0aaf9cdca39bf9a88d",
       "sourceName": "contracts/AppLogic.sol",
       "solcConfig": {
         "version": "0.8.13",
@@ -31,7 +31,7 @@
             }
           },
           "metadata": {
-            "useLiteralContent": false
+            "useLiteralContent": true
           }
         }
       },
@@ -81,7 +81,7 @@
             }
           },
           "metadata": {
-            "useLiteralContent": false
+            "useLiteralContent": true
           }
         }
       },
@@ -125,7 +125,7 @@
             }
           },
           "metadata": {
-            "useLiteralContent": false
+            "useLiteralContent": true
           }
         }
       },
@@ -178,7 +178,7 @@
             }
           },
           "metadata": {
-            "useLiteralContent": false
+            "useLiteralContent": true
           }
         }
       },
@@ -223,7 +223,7 @@
             }
           },
           "metadata": {
-            "useLiteralContent": false
+            "useLiteralContent": true
           }
         }
       },
@@ -268,7 +268,7 @@
             }
           },
           "metadata": {
-            "useLiteralContent": false
+            "useLiteralContent": true
           }
         }
       },
@@ -312,7 +312,7 @@
             }
           },
           "metadata": {
-            "useLiteralContent": false
+            "useLiteralContent": true
           }
         }
       },
@@ -354,7 +354,7 @@
             }
           },
           "metadata": {
-            "useLiteralContent": false
+            "useLiteralContent": true
           }
         }
       },
@@ -396,7 +396,7 @@
             }
           },
           "metadata": {
-            "useLiteralContent": true
+            "useLiteralContent": false
           }
         }
       },
@@ -438,7 +438,7 @@
             }
           },
           "metadata": {
-            "useLiteralContent": false
+            "useLiteralContent": true
           }
         }
       },
@@ -480,7 +480,7 @@
             }
           },
           "metadata": {
-            "useLiteralContent": false
+            "useLiteralContent": true
           }
         }
       },
@@ -527,7 +527,7 @@
             }
           },
           "metadata": {
-            "useLiteralContent": false
+            "useLiteralContent": true
           }
         }
       },
@@ -571,7 +571,7 @@
             }
           },
           "metadata": {
-            "useLiteralContent": false
+            "useLiteralContent": true
           }
         }
       },
@@ -619,7 +619,7 @@
             }
           },
           "metadata": {
-            "useLiteralContent": false
+            "useLiteralContent": true
           }
         }
       },
@@ -664,7 +664,7 @@
             }
           },
           "metadata": {
-            "useLiteralContent": false
+            "useLiteralContent": true
           }
         }
       },
@@ -708,7 +708,7 @@
             }
           },
           "metadata": {
-            "useLiteralContent": false
+            "useLiteralContent": true
           }
         }
       },
@@ -752,7 +752,7 @@
             }
           },
           "metadata": {
-            "useLiteralContent": false
+            "useLiteralContent": true
           }
         }
       },
@@ -797,7 +797,7 @@
             }
           },
           "metadata": {
-            "useLiteralContent": false
+            "useLiteralContent": true
           }
         }
       },
@@ -839,7 +839,7 @@
             }
           },
           "metadata": {
-            "useLiteralContent": false
+            "useLiteralContent": true
           }
         }
       },
@@ -881,7 +881,7 @@
             }
           },
           "metadata": {
-            "useLiteralContent": false
+            "useLiteralContent": true
           }
         }
       },
@@ -923,7 +923,7 @@
             }
           },
           "metadata": {
-            "useLiteralContent": false
+            "useLiteralContent": true
           }
         }
       },
@@ -939,8 +939,8 @@
       ]
     },
     "/Users/logic/superfluid/ul-integration/contracts/mocks/HostMock.sol": {
-      "lastModificationDate": 1649936606519,
-      "contentHash": "cc202d15e659b57b2cb284d7cfa0dbf6",
+      "lastModificationDate": 1649971034656,
+      "contentHash": "3f0dc6a7bbee16feed501da7ae2ba793",
       "sourceName": "contracts/mocks/HostMock.sol",
       "solcConfig": {
         "version": "0.8.13",
@@ -968,7 +968,7 @@
             }
           },
           "metadata": {
-            "useLiteralContent": false
+            "useLiteralContent": true
           }
         }
       },
@@ -984,8 +984,8 @@
       ]
     },
     "/Users/logic/superfluid/ul-integration/contracts/mocks/LockerMock.sol": {
-      "lastModificationDate": 1649952791564,
-      "contentHash": "1eef1b62a2d01e36b6126e1063107fcf",
+      "lastModificationDate": 1649963568221,
+      "contentHash": "2243041aa212b23d98105eab3221e94a",
       "sourceName": "contracts/mocks/LockerMock.sol",
       "solcConfig": {
         "version": "0.8.13",
@@ -1013,7 +1013,7 @@
             }
           },
           "metadata": {
-            "useLiteralContent": false
+            "useLiteralContent": true
           }
         }
       },
@@ -1059,7 +1059,7 @@
             }
           },
           "metadata": {
-            "useLiteralContent": false
+            "useLiteralContent": true
           }
         }
       },
@@ -1106,7 +1106,7 @@
             }
           },
           "metadata": {
-            "useLiteralContent": false
+            "useLiteralContent": true
           }
         }
       },
@@ -1119,7 +1119,7 @@
       ]
     },
     "/Users/logic/superfluid/ul-integration/contracts/mocks/MockCFAv1.sol": {
-      "lastModificationDate": 1649665827038,
+      "lastModificationDate": 1649952821740,
       "contentHash": "d84c62f07969f45632da1631ad205d05",
       "sourceName": "contracts/mocks/MockCFAv1.sol",
       "solcConfig": {
@@ -1148,7 +1148,7 @@
             }
           },
           "metadata": {
-            "useLiteralContent": false
+            "useLiteralContent": true
           }
         }
       },

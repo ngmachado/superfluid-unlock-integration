@@ -13,9 +13,9 @@ contract LockerMock is ILocker{
     bool public revertGrantKey;
     bool public revertCancelAndRefund;
 
-    function setReverts(bool grantKey, bool cancelAndRefund) external {
-        revertGrantKey = grantKey;
-        revertCancelAndRefund = cancelAndRefund;
+    function setReverts(bool fgrantKey, bool fcancelAndRefund) external {
+        revertGrantKey = fgrantKey;
+        revertCancelAndRefund = fcancelAndRefund;
     }
 
     function grantKey(address account, int96 flowRate) external {

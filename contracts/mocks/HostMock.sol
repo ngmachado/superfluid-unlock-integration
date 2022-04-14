@@ -6,12 +6,6 @@ import "../AppLogic.sol";
 
 contract HostMock {
 
-    bytes myCtxStamp;
-
-    function setMyCtxStamp(bytes calldata ctx) external {
-        myCtxStamp = ctx;
-    }
-
     function call_afterAgreementCreated(
         AppLogic app,
         ISuperToken superToken,
@@ -23,14 +17,37 @@ contract HostMock {
     )
     external
     {
-    app.afterAgreementCreated(
-        superToken,
-        agreementClass,
-        agreementId,
-        agreementData,
-        cbdata,
-        ctx
-    );
+        app.afterAgreementCreated(
+            superToken,
+            agreementClass,
+            agreementId,
+            agreementData,
+            cbdata,
+            ctx
+        );
+    }
+
+    function call_beforeAgreementTerminated(
+        AppLogic app,
+        ISuperToken superToken,
+        address agreementClass,
+        bytes32 agreementId,
+        bytes calldata agreementData,
+        bytes calldata ctx
+    )
+    external
+    {
+        bytes memory result = app.beforeAgreementTerminated(
+            superToken,
+            agreementClass,
+            agreementId,
+            agreementData,
+            ctx
+        );
+        //if failed we return empty
+        if(result.length == 0) {
+            require(false, "InvalidCtx() | NotSuperToken() | NotCFAv1()");
+        }
     }
 
     function call_afterAgreementTerminated(
@@ -44,7 +61,7 @@ contract HostMock {
     )
     external
     {
-        app.afterAgreementTerminated(
+        bytes memory result = app.afterAgreementTerminated(
             superToken,
             agreementClass,
             agreementId,
@@ -52,7 +69,13 @@ contract HostMock {
             cbdata,
             ctx
         );
+        //if same size we are returning the same ctx we send
+        if(result.length == ctx.length) {
+            require(false, "InvalidCtx() | NotSuperToken() | NotCFAv1()");
+        }
     }
+
+
 
     function registerAppByFactory(ISuperApp app, uint256 configWord) external pure {
     }
@@ -60,7 +83,6 @@ contract HostMock {
         return ISuperAgreement(address(0));
     }
     function isCtxValid(bytes calldata ctx) external view returns (bool) {
-        bytes memory a = ctx;
-        return keccak256(ctx) == keccak256(myCtxStamp);
+        return !(ctx.length > 0);
     }
 }
