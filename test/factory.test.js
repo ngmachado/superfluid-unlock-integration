@@ -1,6 +1,6 @@
 const { assert } = require("chai");
 const { ethers } = require("hardhat");
-const { ZERO_ADDRESS } = require("./utils/constants");
+const { ZERO_ADDRESS, MIN_FLOWRATE } = require("./utils/constants");
 const { deployTestEnv } = require("./utils/setTestEnv");
 const { expectedRevert } = require("./utils/helperFuncs");
 
@@ -51,14 +51,19 @@ describe("Factory", function () {
       "LockerRequired()"
     );
     assert.ok(rightError);
-    await deployNewClone(env.tokens.daix.address, locker.address, 0);
+    rightError = await expectedRevert(
+      deployNewClone(env.tokens.daix.address, locker.address, 0),
+      "LowFlowRate()"
+    );
+    assert.ok(rightError);
+    await deployNewClone(env.tokens.daix.address, locker.address, MIN_FLOWRATE);
   });
   it("#1.1 - deploy app and re-run initialize", async () => {
     const locker = await env.factories.locker.deploy();
     const { app } = await deployNewClone(
       env.tokens.daix.address,
       locker.address,
-      0
+      MIN_FLOWRATE
     );
     const rightError = await expectedRevert(
       app.initialize(
@@ -90,7 +95,7 @@ describe("Factory", function () {
     const { app } = await deployNewClone(
       env.tokens.daix.address,
       locker.address,
-      1000
+      4294967296
     );
     await env.mocks.host.setMyCtxStamp("0x01");
     const rightError = await expectedRevert(
@@ -117,7 +122,7 @@ describe("Factory", function () {
     const { app } = await deployNewClone(
       env.tokens.daix.address,
       locker.address,
-      1000,
+      MIN_FLOWRATE,
       env.mocks.host.address
     );
     let rightError = await expectedRevert(
@@ -179,7 +184,7 @@ describe("Factory", function () {
     const { app } = await deployNewClone(
       env.tokens.daix.address,
       locker.address,
-      1000,
+      MIN_FLOWRATE,
       env.mocks.host.address
     );
 

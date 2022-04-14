@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/Users/logic/superfluid/ul-integration/contracts/AppLogic.sol": {
-      "lastModificationDate": 1649665827039,
-      "contentHash": "a0ee29fd5d82bd81ccc511e97e88b832",
+      "lastModificationDate": 1649952640337,
+      "contentHash": "c67d193829cfeb62164aa747f1be052c",
       "sourceName": "contracts/AppLogic.sol",
       "solcConfig": {
         "version": "0.8.13",
@@ -31,7 +31,7 @@
             }
           },
           "metadata": {
-            "useLiteralContent": true
+            "useLiteralContent": false
           }
         }
       },
@@ -81,7 +81,7 @@
             }
           },
           "metadata": {
-            "useLiteralContent": true
+            "useLiteralContent": false
           }
         }
       },
@@ -125,7 +125,7 @@
             }
           },
           "metadata": {
-            "useLiteralContent": true
+            "useLiteralContent": false
           }
         }
       },
@@ -178,7 +178,7 @@
             }
           },
           "metadata": {
-            "useLiteralContent": true
+            "useLiteralContent": false
           }
         }
       },
@@ -223,7 +223,7 @@
             }
           },
           "metadata": {
-            "useLiteralContent": true
+            "useLiteralContent": false
           }
         }
       },
@@ -268,7 +268,7 @@
             }
           },
           "metadata": {
-            "useLiteralContent": true
+            "useLiteralContent": false
           }
         }
       },
@@ -312,7 +312,7 @@
             }
           },
           "metadata": {
-            "useLiteralContent": true
+            "useLiteralContent": false
           }
         }
       },
@@ -354,7 +354,7 @@
             }
           },
           "metadata": {
-            "useLiteralContent": true
+            "useLiteralContent": false
           }
         }
       },
@@ -364,6 +364,48 @@
       ],
       "artifacts": [
         "Errors"
+      ]
+    },
+    "/Users/logic/superfluid/ul-integration/node_modules/hardhat/console.sol": {
+      "lastModificationDate": 1649666512470,
+      "contentHash": "cc4777addd464ea56fa35b1c45df0591",
+      "sourceName": "hardhat/console.sol",
+      "solcConfig": {
+        "version": "0.8.13",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        ">=0.4.22 <0.9.0"
+      ],
+      "artifacts": [
+        "console"
       ]
     },
     "/Users/logic/superfluid/ul-integration/node_modules/@openzeppelin/contracts/utils/Address.sol": {
@@ -396,7 +438,7 @@
             }
           },
           "metadata": {
-            "useLiteralContent": true
+            "useLiteralContent": false
           }
         }
       },
@@ -438,7 +480,7 @@
             }
           },
           "metadata": {
-            "useLiteralContent": true
+            "useLiteralContent": false
           }
         }
       },
@@ -485,7 +527,7 @@
             }
           },
           "metadata": {
-            "useLiteralContent": true
+            "useLiteralContent": false
           }
         }
       },
@@ -529,7 +571,7 @@
             }
           },
           "metadata": {
-            "useLiteralContent": true
+            "useLiteralContent": false
           }
         }
       },
@@ -577,7 +619,7 @@
             }
           },
           "metadata": {
-            "useLiteralContent": true
+            "useLiteralContent": false
           }
         }
       },
@@ -622,7 +664,7 @@
             }
           },
           "metadata": {
-            "useLiteralContent": true
+            "useLiteralContent": false
           }
         }
       },
@@ -666,7 +708,7 @@
             }
           },
           "metadata": {
-            "useLiteralContent": true
+            "useLiteralContent": false
           }
         }
       },
@@ -710,7 +752,7 @@
             }
           },
           "metadata": {
-            "useLiteralContent": true
+            "useLiteralContent": false
           }
         }
       },
@@ -755,7 +797,7 @@
             }
           },
           "metadata": {
-            "useLiteralContent": true
+            "useLiteralContent": false
           }
         }
       },
@@ -797,7 +839,7 @@
             }
           },
           "metadata": {
-            "useLiteralContent": true
+            "useLiteralContent": false
           }
         }
       },
@@ -839,7 +881,7 @@
             }
           },
           "metadata": {
-            "useLiteralContent": true
+            "useLiteralContent": false
           }
         }
       },
@@ -881,7 +923,7 @@
             }
           },
           "metadata": {
-            "useLiteralContent": true
+            "useLiteralContent": false
           }
         }
       },
@@ -897,7 +939,7 @@
       ]
     },
     "/Users/logic/superfluid/ul-integration/contracts/mocks/HostMock.sol": {
-      "lastModificationDate": 1649667819308,
+      "lastModificationDate": 1649936606519,
       "contentHash": "cc202d15e659b57b2cb284d7cfa0dbf6",
       "sourceName": "contracts/mocks/HostMock.sol",
       "solcConfig": {
@@ -926,7 +968,7 @@
             }
           },
           "metadata": {
-            "useLiteralContent": true
+            "useLiteralContent": false
           }
         }
       },
@@ -942,8 +984,8 @@
       ]
     },
     "/Users/logic/superfluid/ul-integration/contracts/mocks/LockerMock.sol": {
-      "lastModificationDate": 1649665827037,
-      "contentHash": "1e1cae2bcfdb1ffa2aaa0bd4ada270e5",
+      "lastModificationDate": 1649952791564,
+      "contentHash": "1eef1b62a2d01e36b6126e1063107fcf",
       "sourceName": "contracts/mocks/LockerMock.sol",
       "solcConfig": {
         "version": "0.8.13",
@@ -971,7 +1013,7 @@
             }
           },
           "metadata": {
-            "useLiteralContent": true
+            "useLiteralContent": false
           }
         }
       },
@@ -988,8 +1030,8 @@
       ]
     },
     "/Users/logic/superfluid/ul-integration/contracts/CloneFactory.sol": {
-      "lastModificationDate": 1649665827039,
-      "contentHash": "c973c320ec929a11d698b9ef3a372327",
+      "lastModificationDate": 1649945402390,
+      "contentHash": "6cd3b7b172493d1fc9381e88bf1d552a",
       "sourceName": "contracts/CloneFactory.sol",
       "solcConfig": {
         "version": "0.8.13",
@@ -1017,7 +1059,7 @@
             }
           },
           "metadata": {
-            "useLiteralContent": true
+            "useLiteralContent": false
           }
         }
       },
@@ -1064,7 +1106,7 @@
             }
           },
           "metadata": {
-            "useLiteralContent": true
+            "useLiteralContent": false
           }
         }
       },
@@ -1106,7 +1148,7 @@
             }
           },
           "metadata": {
-            "useLiteralContent": true
+            "useLiteralContent": false
           }
         }
       },

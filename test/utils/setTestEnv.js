@@ -10,7 +10,6 @@ const ISuperfluid =
 const { ethers, web3 } = require("hardhat");
 const { Framework } = require("@superfluid-finance/sdk-core");
 
-
 const provider = web3;
 
 const errorHandler = (err) => {
@@ -59,14 +58,22 @@ const deployTestEnv = async () => {
     GovernanceABI,
     accounts[0]
   );
-  const _appDeployer = await ethers.getContractFactory("AppLogic", accounts[0]);
+  const _appDeployer = await ethers.getContractFactory(
+    "AppLogic",
+    accounts[0]
+  );
   const _appLogicImplementation = await _appDeployer.deploy();
   const _cloneFactory = await ethers.getContractFactory(
     "CloneFactory",
     accounts[0]
   );
-  const cloneFactory = await _cloneFactory.deploy(_appLogicImplementation.address);
-  const lockerFactory = await ethers.getContractFactory("LockerMock", accounts[0]);
+  const cloneFactory = await _cloneFactory.deploy(
+    _appLogicImplementation.address
+  );
+  const lockerFactory = await ethers.getContractFactory(
+    "LockerMock",
+    accounts[0]
+  );
   const _hostFactory = await ethers.getContractFactory("HostMock", accounts[0]);
   const mockHost = await _hostFactory.deploy();
   const _CFAV1Factory = await ethers.getContractFactory(

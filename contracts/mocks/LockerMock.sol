@@ -27,25 +27,4 @@ contract LockerMock is ILocker{
         require(!revertCancelAndRefund, "cancelAndRefund revert");
         emit CancelAndRefund(account);
     }
-
-    function createFlow(
-        address host,
-        address cfa,
-        address token,
-        address receiver,
-        int96 flowRate
-    ) external {
-        ISuperfluid(host).callAgreement(
-            IConstantFlowAgreementV1(cfa),
-            abi.encodeWithSelector(
-                    IConstantFlowAgreementV1(cfa).createFlow.selector,
-                    ISuperToken(token),
-                receiver,
-                flowRate,
-                new bytes(0)
-            ),
-            "0x"
-        );
-    }
-
 }
