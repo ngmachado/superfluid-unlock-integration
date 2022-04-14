@@ -36,7 +36,12 @@ describe("Factory", function () {
     );
     assert.ok(rightError);
     rightError = await f.expectedRevert(
-      f.deployNewClone(env, env.tokens.daix.address, ZERO_ADDRESS, MIN_FLOWRATE),
+      f.deployNewClone(
+        env,
+        env.tokens.daix.address,
+        ZERO_ADDRESS,
+        MIN_FLOWRATE
+      ),
       "LockerRequired()"
     );
     assert.ok(rightError);
@@ -157,8 +162,149 @@ describe("Factory", function () {
     );
     assert.ok(rightError);
   });
+  it("#2.3 - Callback from wrong host (beforeAgreementUpdated)", async () => {
+    const locker = await env.factories.locker.deploy();
+    const { app } = await f.deployNewClone(
+      env,
+      env.tokens.daix.address,
+      locker.address,
+      MIN_FLOWRATE
+    );
+    const rightError = await f.expectedRevert(
+      env.mocks.host.call_beforeAgreementUpdated(
+        app.address,
+        env.tokens.daix.address,
+        env.sf.settings.config.cfaV1Address,
+        anyAgreementId,
+        anyAgreementData,
+        anyCtx
+      ),
+      "NotHost()"
+    );
+    assert.ok(rightError);
+  });
+  it("#2.4 - Callback with wrong data (beforeAgreementUpdated)", async () => {
+    const locker = await env.factories.locker.deploy();
+    const { app } = await f.deployNewClone(
+      env,
+      env.tokens.daix.address,
+      locker.address,
+      MIN_FLOWRATE,
+      env.mocks.host.address
+    );
+    let rightError = await f.expectedRevert(
+      env.mocks.host.call_beforeAgreementUpdated(
+        app.address,
+        env.tokens.daix.address,
+        env.sf.settings.config.cfaV1Address,
+        anyAgreementId,
+        anyAgreementData,
+        "0x01"
+      ),
+      "InvalidCtx()"
+    );
+    assert.ok(rightError);
 
-  it("#2.5 - Callback from wrong host (beforeAgreementTerminated)", async () => {
+    rightError = await f.expectedRevert(
+      env.mocks.host.call_beforeAgreementUpdated(
+        app.address,
+        app.address,
+        env.sf.settings.config.cfaV1Address,
+        anyAgreementId,
+        anyAgreementData,
+        anyCtx
+      ),
+      "NotSuperToken()"
+    );
+
+    assert.ok(rightError);
+    rightError = await f.expectedRevert(
+      env.mocks.host.call_beforeAgreementUpdated(
+        app.address,
+        env.tokens.daix.address,
+        env.mocks.cfa.address,
+        anyAgreementId,
+        anyAgreementData,
+        anyCtx
+      ),
+      "NotCFAv1()"
+    );
+    assert.ok(rightError);
+  });
+  it("#2.5 - Callback from wrong host (afterAgreementUpdated)", async () => {
+    const locker = await env.factories.locker.deploy();
+    const { app } = await f.deployNewClone(
+      env,
+      env.tokens.daix.address,
+      locker.address,
+      MIN_FLOWRATE
+    );
+    const rightError = await f.expectedRevert(
+      env.mocks.host.call_afterAgreementUpdated(
+        app.address,
+        env.tokens.daix.address,
+        env.sf.settings.config.cfaV1Address,
+        anyAgreementId,
+        anyAgreementData,
+        anyCbData,
+        anyCtx
+      ),
+      "NotHost()"
+    );
+    assert.ok(rightError);
+  });
+  it("#2.6 - Callback with wrong data (afterAgreementUpdated)", async () => {
+    const locker = await env.factories.locker.deploy();
+    const { app } = await f.deployNewClone(
+      env,
+      env.tokens.daix.address,
+      locker.address,
+      MIN_FLOWRATE,
+      env.mocks.host.address
+    );
+    let rightError = await f.expectedRevert(
+      env.mocks.host.call_afterAgreementUpdated(
+        app.address,
+        env.tokens.daix.address,
+        env.sf.settings.config.cfaV1Address,
+        anyAgreementId,
+        anyAgreementData,
+        anyCbData,
+        "0x01"
+      ),
+      "InvalidCtx()"
+    );
+    assert.ok(rightError);
+
+    rightError = await f.expectedRevert(
+      env.mocks.host.call_afterAgreementUpdated(
+        app.address,
+        app.address,
+        env.sf.settings.config.cfaV1Address,
+        anyAgreementId,
+        anyAgreementData,
+        anyCbData,
+        anyCtx
+      ),
+      "NotSuperToken()"
+    );
+
+    assert.ok(rightError);
+    rightError = await f.expectedRevert(
+      env.mocks.host.call_afterAgreementUpdated(
+        app.address,
+        env.tokens.daix.address,
+        env.mocks.cfa.address,
+        anyAgreementId,
+        anyAgreementData,
+        anyCbData,
+        anyCtx
+      ),
+      "NotCFAv1()"
+    );
+    assert.ok(rightError);
+  });
+  it("#2.7 - Callback from wrong host (beforeAgreementTerminated)", async () => {
     const locker = await env.factories.locker.deploy();
     const { app } = await f.deployNewClone(
       env,
@@ -179,7 +325,7 @@ describe("Factory", function () {
     );
     assert.ok(rightError);
   });
-  it("#2.6 - Callback with wrong data (beforeAgreementTerminated)", async () => {
+  it("#2.8 - Callback with wrong data (beforeAgreementTerminated)", async () => {
     const locker = await env.factories.locker.deploy();
     const { app } = await f.deployNewClone(
       env,
@@ -227,8 +373,7 @@ describe("Factory", function () {
     );
     assert.ok(rightError);
   });
-
-  it("#2.7 - Callback from wrong host (afterAgreementTerminated)", async () => {
+  it("#2.9 - Callback from wrong host (afterAgreementTerminated)", async () => {
     const locker = await env.factories.locker.deploy();
     const { app } = await f.deployNewClone(
       env,
@@ -250,7 +395,7 @@ describe("Factory", function () {
     );
     assert.ok(rightError);
   });
-  it("#2.8 - Callback with wrong data (afterAgreementTerminated)", async () => {
+  it("#2.10 - Callback with wrong data (afterAgreementTerminated)", async () => {
     const locker = await env.factories.locker.deploy();
     const { app } = await f.deployNewClone(
       env,

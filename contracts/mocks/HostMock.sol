@@ -27,6 +27,46 @@ contract HostMock {
         );
     }
 
+    function call_beforeAgreementUpdated(
+        AppLogic app,
+        ISuperToken superToken,
+        address agreementClass,
+        bytes32 agreementId,
+        bytes calldata agreementData,
+        bytes calldata ctx
+    )
+    external
+    {
+        app.beforeAgreementUpdated(
+            superToken,
+            agreementClass,
+            agreementId,
+            agreementData,
+            ctx
+        );
+    }
+
+    function call_afterAgreementUpdated(
+        AppLogic app,
+        ISuperToken superToken,
+        address agreementClass,
+        bytes32 agreementId,
+        bytes calldata agreementData,
+        bytes calldata cbdata,
+        bytes calldata ctx
+    )
+    external
+    {
+        app.afterAgreementUpdated(
+            superToken,
+            agreementClass,
+            agreementId,
+            agreementData,
+            cbdata,
+            ctx
+        );
+    }
+
     function call_beforeAgreementTerminated(
         AppLogic app,
         ISuperToken superToken,

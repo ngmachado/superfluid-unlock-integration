@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/Users/logic/superfluid/ul-integration/contracts/AppLogic.sol": {
-      "lastModificationDate": 1649953673413,
-      "contentHash": "8401618213821f0aaf9cdca39bf9a88d",
+      "lastModificationDate": 1649971602710,
+      "contentHash": "7323230efa04bda87f56e8388d683b26",
       "sourceName": "contracts/AppLogic.sol",
       "solcConfig": {
         "version": "0.8.13",
@@ -939,8 +939,8 @@
       ]
     },
     "/Users/logic/superfluid/ul-integration/contracts/mocks/HostMock.sol": {
-      "lastModificationDate": 1649971034656,
-      "contentHash": "3f0dc6a7bbee16feed501da7ae2ba793",
+      "lastModificationDate": 1649971792275,
+      "contentHash": "635370e559a7ecdc5580665bc7f0e0e1",
       "sourceName": "contracts/mocks/HostMock.sol",
       "solcConfig": {
         "version": "0.8.13",

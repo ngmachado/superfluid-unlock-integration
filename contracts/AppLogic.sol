@@ -80,13 +80,16 @@ contract AppLogic is SuperAppBase, Initializable {
     }
 
     function beforeAgreementUpdated(
-        ISuperToken /*superToken*/,
-        address /*agreementClass*/,
+        ISuperToken superToken,
+        address agreementClass,
         bytes32 agreementId,
         bytes calldata agreementData,
         bytes calldata ctx
     )
     external override
+    onlyHost
+    validCtx(ctx)
+    onlyExpected(superToken, agreementClass)
     view
     returns (bytes memory cbdata)
     {
