@@ -1,6 +1,8 @@
 const { ethers, network } = require("hardhat");
 const AppLogicABI = require("../../artifacts/contracts/AppLogic.sol/AppLogic.json");
 const { assert } = require("chai");
+const BN = require("bn.js");
+
 const expectedRevert = async (
   fn,
   revertMsg,
@@ -18,7 +20,6 @@ const expectedRevert = async (
     return err.toString().includes(revertMsg);
   }
 };
-
 
 const deployNewClone = async (
   env,
@@ -45,7 +46,7 @@ const deployNewClone = async (
   };
 };
 
-const mintAndUpgrade = async (env,account, amount = "1000") => {
+const mintAndUpgrade = async (env, account, amount = "1000") => {
   await env.tokens.dai.mint(
     account.address,
     ethers.utils.parseUnits(amount, 18)
@@ -59,7 +60,7 @@ const mintAndUpgrade = async (env,account, amount = "1000") => {
   await daixUpgradeOperation.exec(account);
 };
 
-const getFlowRate = async (env,sender, receiver) => {
+const getFlowRate = async (env, sender, receiver) => {
   return await env.sf.cfaV1.getFlow({
     superToken: env.tokens.daix.address,
     sender: sender,
@@ -95,6 +96,12 @@ const createStreamWithCheck = async (
 
   const flowUserToApp = await getFlowRate(env, account.address, receiver);
   const flowAppToLocker = await getFlowRate(env, receiver, lockerAddress);
+  const senderClippedFlow = clip96x32(flowRate);
+  assert.isAtLeast(
+    Number(flowAppToLocker.flowRate),
+    Number(senderClippedFlow),
+    "Locker should receive at least the clipped flow"
+  );
 
   const r = {
     sender: account.address,
@@ -129,6 +136,12 @@ const updateStreamWithCheck = async (
   );
   const flowUserToApp = await getFlowRate(env, account.address, receiver);
   const flowAppToLocker = await getFlowRate(env, receiver, lockerAddress);
+  const senderClippedFlow = clip96x32(flowRate);
+  assert.isAtLeast(
+    Number(flowAppToLocker.flowRate),
+    Number(senderClippedFlow),
+    "Locker should receive at least the clipped flow"
+  );
   assert.equal(
     flowUserToApp.flowRate,
     flowRate,
@@ -159,7 +172,14 @@ const multiUpdateStreamWithCheck = async (
 ) => {
   if (arrFlowRates.length === 0) throw Error("empty array");
   for (const flow of arrFlowRates) {
-    await updateStreamWithCheck(env, account, receiver, lockerAddress, flow, consolePrint);
+    await updateStreamWithCheck(
+      env,
+      account,
+      receiver,
+      lockerAddress,
+      flow,
+      consolePrint
+    );
     await advTime();
   }
 };
@@ -171,7 +191,10 @@ const deleteStreamWithCheck = async (
   lockerAddress,
   consolePrint = false
 ) => {
+  const flowUserToAppBefore = await getFlowRate(env, account.address, receiver);
+  const clippedSenderFlow = clip96x32(flowUserToAppBefore.flowRate);
   const flowAppToLockerBefore = await getFlowRate(env, receiver, lockerAddress);
+  const finalAppToLockerFlow = toBN(flowAppToLockerBefore.flowRate).sub(clippedSenderFlow);
   const deleteFlowOperation = env.sf.cfaV1.deleteFlow({
     sender: account.address,
     receiver: receiver,
@@ -185,11 +208,12 @@ const deleteStreamWithCheck = async (
   );
   const flowUserToApp = await getFlowRate(env, account.address, receiver);
   const flowAppToLocker = await getFlowRate(env, receiver, lockerAddress);
+
   assert.equal(flowUserToApp.flowRate, "0", "sender stream not deleted");
-  assert.isBelow(
-    Number(flowAppToLocker.flowRate),
-    Number(flowAppToLockerBefore.flowRate),
-    "stream deletion didn't update outstream"
+  assert.equal(
+    flowAppToLocker.flowRate.toString(),
+    finalAppToLockerFlow.toString(),
+    "stream deletion didn't update outgoing stream"
   );
   const r = {
     sender: account.address,
@@ -204,19 +228,23 @@ const deleteStreamWithCheck = async (
   return r;
 };
 
-
-const multiDeleteStreamWithCheck = async(
+const multiDeleteStreamWithCheck = async (
   env,
   arrAccounts,
   receiver,
   lockerAddress,
-  consolePrint = false) =>
-{
+  consolePrint = false
+) => {
   if (arrAccounts.length === 0) throw Error("empty array");
   for (const account of arrAccounts) {
-    await deleteStreamWithCheck(env, account, receiver, lockerAddress, consolePrint);
+    await deleteStreamWithCheck(
+      env,
+      account,
+      receiver,
+      lockerAddress,
+      consolePrint
+    );
   }
-
 };
 
 const withdrawDustMoney = async (env, app, locker) => {
@@ -261,6 +289,15 @@ const advTime = async (seconds = 3600) => {
   await network.provider.send("evm_mine");
 };
 
+const clip96x32 = (a) => {
+  const _a = new BN(a);
+  return _a.shrn(32).shln(32);
+};
+
+const toBN = (a) => {
+  return new BN(a);
+}
+
 module.exports = {
   expectedRevert,
   deployNewClone,
@@ -275,5 +312,7 @@ module.exports = {
   withdrawDustMoney,
   getRTB,
   isAppJailed,
-  advTime
-}
+  advTime,
+  clip96x32,
+  toBN,
+};
