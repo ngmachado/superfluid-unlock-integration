@@ -165,7 +165,7 @@ contract AppLogic is SuperAppBase, Initializable {
         (,flowRate , ,) = cfa.getFlowByID(acceptedToken, agreementId);
     }
 
-    function _clip96x32(int96 n) internal view returns(int96 r) {
+    function _clip96x32(int96 n) internal pure returns(int96 r) {
         r = ((n >> 32) << 32);
         assert(r != 0);
     }
