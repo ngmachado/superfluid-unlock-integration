@@ -7,6 +7,7 @@ contract MockCFAv1 {
     function agreementTypeString(string memory atype) external {
         _agreementTypeString = atype;
     }
+
     function agreementType() external view returns (bytes32) {
         return keccak256(abi.encode(_agreementTypeString));
     }
