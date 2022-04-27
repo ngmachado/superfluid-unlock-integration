@@ -186,7 +186,6 @@ contract AppLogic is SuperAppBase, Initializable {
     function _clip96x32(int96 n) internal pure returns(int96 r) {
         // the right shift throws away the least significant 32 bit, then the left shift fills them with 0
         r = ((n >> 32) << 32);
-        assert(r != 0);
     }
 
     // reduce outgoing stream, close stream if needed
