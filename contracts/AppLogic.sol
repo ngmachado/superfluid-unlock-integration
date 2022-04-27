@@ -15,9 +15,7 @@ contract AppLogic is SuperAppBase, Initializable {
 
     event LockerCloseNotificationFailed(address indexed locker);
 
-    CFAv1Library.InitData public cfaV1;
-    ISuperfluid public host;
-    IConstantFlowAgreementV1 public cfa;
+    CFAv1Library.InitData public cfaV1Lib;
     ISuperToken public acceptedToken;
     uint96 public minFlowRate;
     ILocker public locker;
@@ -29,22 +27,24 @@ contract AppLogic is SuperAppBase, Initializable {
         address _locker,
         uint96 _minFlowRate
     )
-    external
-    initializer
+        external
+        initializer
     {
         if(_host == address(0)) revert Errors.HostRequired();
         if(_acceptedToken == address(0)) revert Errors.SuperTokenRequired();
         if(_locker == address(0)) revert Errors.LockerRequired();
         if(_minFlowRate < 2**32) revert Errors.LowFlowRate();
 
-        host = ISuperfluid(_host);
-        cfa = IConstantFlowAgreementV1(
-            address(host.getAgreementClass(cfaID))
+        cfaV1Lib = CFAv1Library.InitData(
+            ISuperfluid(_host),
+            IConstantFlowAgreementV1(
+                address(ISuperfluid(_host).getAgreementClass(cfaID))
+            )
         );
+        
         acceptedToken = ISuperToken(_acceptedToken);
         locker = ILocker(_locker);
         minFlowRate = _minFlowRate;
-        cfaV1 = CFAv1Library.InitData(host, cfa);
     }
 
     function withdraw() external {
@@ -67,10 +67,10 @@ contract AppLogic is SuperAppBase, Initializable {
         bytes calldata ctx
     )
     external override
-    onlyHost
-    validCtx(ctx)
-    onlyExpected(superToken, agreementClass)
-    returns (bytes memory newCtx)
+        onlyHost
+        validCtx(ctx)
+        onlyExpected(superToken, agreementClass)
+        returns (bytes memory newCtx)
     {
         (address sender,) = abi.decode(agreementData, (address, address));
         int96 flowRate = _getFlowRateByID(agreementId);
@@ -86,12 +86,12 @@ contract AppLogic is SuperAppBase, Initializable {
         bytes calldata agreementData,
         bytes calldata ctx
     )
-    external override
-    onlyHost
-    validCtx(ctx)
-    onlyExpected(superToken, agreementClass)
-    view
-    returns (bytes memory cbdata)
+        external override
+        onlyHost
+        validCtx(ctx)
+        onlyExpected(superToken, agreementClass)
+        view
+        returns (bytes memory cbdata)
     {
         return abi.encode(_clip96x32(_getFlowRateByID(agreementId)));
     }
@@ -104,11 +104,11 @@ contract AppLogic is SuperAppBase, Initializable {
         bytes calldata cbdata,
         bytes calldata ctx
     )
-    external override
-    onlyHost
-    validCtx(ctx)
-    onlyExpected(superToken, agreementClass)
-    returns (bytes memory newCtx)
+        external override
+        onlyHost
+        validCtx(ctx)
+        onlyExpected(superToken, agreementClass)
+        returns (bytes memory newCtx)
     {
         int96 clippedOldFlowRate = abi.decode(cbdata, (int96));
         int96 newFlowRate = _getFlowRateByID(agreementId);
@@ -128,11 +128,11 @@ contract AppLogic is SuperAppBase, Initializable {
         bytes calldata /*agreementData*/,
         bytes calldata ctx
     )
-    external
-    view
-    override
-    onlyHost
-    returns (bytes memory cbdata)
+        external
+        view
+        override
+        onlyHost
+        returns (bytes memory cbdata)
     {
         if (!_isCtxValid(ctx) || !_isSameToken(superToken) || !_isCFAv1(agreementClass) )
             return "";
@@ -147,9 +147,9 @@ contract AppLogic is SuperAppBase, Initializable {
         bytes calldata cbdata,
         bytes calldata ctx
     )
-    external override
-    onlyHost
-    returns (bytes memory newCtx)
+        external override
+        onlyHost
+        returns (bytes memory newCtx)
     {
         if (!_isCtxValid(ctx) || !_isSameToken(superToken) || !_isCFAv1(agreementClass) )
             return ctx;
@@ -162,7 +162,7 @@ contract AppLogic is SuperAppBase, Initializable {
     }
 
     function _getFlowRateByID(bytes32 agreementId) internal view returns(int96 flowRate) {
-        (,flowRate , ,) = cfa.getFlowByID(acceptedToken, agreementId);
+        (,flowRate , ,) = cfaV1Lib.cfa.getFlowByID(acceptedToken, agreementId);
     }
 
     function _clip96x32(int96 n) internal pure returns(int96 r) {
@@ -172,22 +172,22 @@ contract AppLogic is SuperAppBase, Initializable {
 
     //reduce outgoing stream, close stream if needed
     function _reduceFlowBy(int96 amount, bytes memory ctx) internal returns(bytes memory newCtx) {
-        (, int96 flowToLocker , ,) = cfa.getFlow(acceptedToken, address(this), address(locker));
+        (, int96 flowToLocker , ,) = cfaV1Lib.cfa.getFlow(acceptedToken, address(this), address(locker));
         int96 amountToReduce = flowToLocker - amount;
         if(amountToReduce <= 0) {
-            return cfaV1.deleteFlowWithCtx(ctx, address(this), address(locker), acceptedToken);
+            return cfaV1Lib.deleteFlowWithCtx(ctx, address(this), address(locker), acceptedToken);
         }
-        return cfaV1.updateFlowWithCtx(ctx, address(locker), acceptedToken, amountToReduce);
+        return cfaV1Lib.updateFlowWithCtx(ctx, address(locker), acceptedToken, amountToReduce);
     }
     //increase outgoing stream, open stream if needed
     function _increaseFlowBy(int96 amount, bytes memory ctx) internal returns(bytes memory newCtx) {
-        (, int96 flowToLocker , ,) = cfa.getFlow(acceptedToken, address(this), address(locker));
+        (, int96 flowToLocker , ,) = cfaV1Lib.cfa.getFlow(acceptedToken, address(this), address(locker));
         //locker is not getting a stream, open one
         if(flowToLocker == 0) {
-            return cfaV1.createFlowWithCtx(ctx, address(locker), acceptedToken, amount);
+            return cfaV1Lib.createFlowWithCtx(ctx, address(locker), acceptedToken, amount);
         } else {
             //note: this will revert in the case of a overflow
-            return cfaV1.updateFlowWithCtx(ctx, address(locker), acceptedToken, (flowToLocker + amount));
+            return cfaV1Lib.updateFlowWithCtx(ctx, address(locker), acceptedToken, (flowToLocker + amount));
         }
     }
 
@@ -200,11 +200,11 @@ contract AppLogic is SuperAppBase, Initializable {
     }
 
     function _isCtxValid(bytes memory ctx) private view returns(bool) {
-        return host.isCtxValid(ctx);
+        return cfaV1Lib.host.isCtxValid(ctx);
     }
 
     modifier onlyHost() {
-        if(msg.sender != address(host)) revert Errors.NotHost();
+        if(msg.sender != address(cfaV1Lib.host)) revert Errors.NotHost();
         _;
     }
 
