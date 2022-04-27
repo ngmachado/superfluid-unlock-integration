@@ -118,11 +118,7 @@ contract HostMock {
     function registerAppByFactory(ISuperApp app, uint256 configWord) external pure {
     }
 
-    function getAgreementClass(bytes32 agreementType) external pure returns(ISuperAgreement agreementClass) {
+    function getAgreementClass(bytes32 /*agreementType*/) external pure returns(ISuperAgreement agreementClass) {
         return ISuperAgreement(address(0));
-    }
-
-    function isCtxValid(bytes calldata ctx) external view returns (bool) {
-        return !(ctx.length > 0);
     }
 }
