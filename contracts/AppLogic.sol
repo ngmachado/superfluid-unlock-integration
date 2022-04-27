@@ -172,6 +172,9 @@ contract AppLogic is SuperAppBase, Initializable {
         } catch {
             emit LockerCloseNotificationFailed(address(locker));
         }
+        // CAUTION: Don't add any logic after this external call to the Locker contract!
+        // If it were to run out of gas, that could cause this call to run out of gas too
+        // which could cause the App to be jailed if exhausting the SF callback gas limit
     }
 
     /**************************************************************************
