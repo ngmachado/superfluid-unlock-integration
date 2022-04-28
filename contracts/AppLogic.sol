@@ -151,7 +151,7 @@ contract AppLogic is SuperAppBase, Initializable {
     function afterAgreementTerminated(
         ISuperToken superToken,
         address agreementClass,
-        bytes32, /*agreementId*/,
+        bytes32 /*agreementId*/,
         bytes calldata agreementData,
         bytes calldata cbdata,
         bytes calldata ctx
