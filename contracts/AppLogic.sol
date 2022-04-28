@@ -99,8 +99,6 @@ contract AppLogic is SuperAppBase, Initializable {
         bytes calldata /*ctx*/
     )
         external override
-        onlyHost
-        onlyExpected(superToken, agreementClass)
         view
         returns (bytes memory cbdata)
     {
