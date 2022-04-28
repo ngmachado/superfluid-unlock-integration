@@ -45,11 +45,6 @@ describe("⏬ Factory - Deployments", function () {
       "LockerRequired()"
     );
     assert.ok(rightError);
-    rightError = await f.expectedRevert(
-      f.deployNewClone(env, env.tokens.daix.address, locker.address, 0),
-      "LowFlowRate()"
-    );
-    assert.ok(rightError);
     await f.deployNewClone(
       env,
       env.tokens.daix.address,
