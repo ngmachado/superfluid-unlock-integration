@@ -86,7 +86,7 @@ contract HostMock {
         );
         //if failed we return empty
         if(result.length == 0) {
-            require(false, "InvalidCtx() | NotSuperToken() | NotCFAv1()");
+            require(false, "NotSuperToken() | NotCFAv1()");
         }
     }
 
@@ -111,7 +111,7 @@ contract HostMock {
         );
         //if same size we are returning the same ctx we send
         if(result.length == ctx.length) {
-            require(false, "InvalidCtx() | NotSuperToken() | NotCFAv1()");
+            require(false, "NotSuperToken() | NotCFAv1()");
         }
     }
 
