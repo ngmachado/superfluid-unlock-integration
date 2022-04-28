@@ -25,10 +25,11 @@ contract CloneFactory {
         address host,
         address acceptedToken,
         address locker,
-        uint96 minFlowRate)
-    external
-    onlyOwner
-    returns(address)
+        uint96 minFlowRate
+    )
+        external
+        onlyOwner
+        returns(address)
     {
         address newAppClone = Clones.clone(address(appLogicImplementation));
         AppLogic(newAppClone).initialize(host, acceptedToken, locker, minFlowRate);

@@ -128,19 +128,6 @@ describe("📣 Factory - Callbacks checks", function() {
     let rightError = await f.expectedRevert(
       env.mocks.host.call_afterAgreementCreated(
         app.address,
-        env.tokens.daix.address,
-        env.sf.settings.config.cfaV1Address,
-        anyAgreementId,
-        anyAgreementData,
-        anyCbData,
-        "0x01"
-      ),
-      "InvalidCtx()"
-    );
-    assert.ok(rightError);
-    rightError = await f.expectedRevert(
-      env.mocks.host.call_afterAgreementCreated(
-        app.address,
         app.address,
         env.sf.settings.config.cfaV1Address,
         anyAgreementId,
@@ -198,19 +185,6 @@ describe("📣 Factory - Callbacks checks", function() {
     let rightError = await f.expectedRevert(
       env.mocks.host.call_beforeAgreementUpdated(
         app.address,
-        env.tokens.daix.address,
-        env.sf.settings.config.cfaV1Address,
-        anyAgreementId,
-        anyAgreementData,
-        "0x01"
-      ),
-      "InvalidCtx()"
-    );
-    assert.ok(rightError);
-
-    rightError = await f.expectedRevert(
-      env.mocks.host.call_beforeAgreementUpdated(
-        app.address,
         app.address,
         env.sf.settings.config.cfaV1Address,
         anyAgreementId,
@@ -266,20 +240,6 @@ describe("📣 Factory - Callbacks checks", function() {
       env.mocks.host.address
     );
     let rightError = await f.expectedRevert(
-      env.mocks.host.call_afterAgreementUpdated(
-        app.address,
-        env.tokens.daix.address,
-        env.sf.settings.config.cfaV1Address,
-        anyAgreementId,
-        anyAgreementData,
-        anyCbData,
-        "0x01"
-      ),
-      "InvalidCtx()"
-    );
-    assert.ok(rightError);
-
-    rightError = await f.expectedRevert(
       env.mocks.host.call_afterAgreementUpdated(
         app.address,
         app.address,
@@ -340,19 +300,6 @@ describe("📣 Factory - Callbacks checks", function() {
     let rightError = await f.expectedRevert(
       env.mocks.host.call_beforeAgreementTerminated(
         app.address,
-        env.tokens.daix.address,
-        env.sf.settings.config.cfaV1Address,
-        anyAgreementId,
-        anyAgreementData,
-        "0x01"
-      ),
-      "InvalidCtx()"
-    );
-    assert.ok(rightError);
-
-    rightError = await f.expectedRevert(
-      env.mocks.host.call_beforeAgreementTerminated(
-        app.address,
         app.address,
         env.sf.settings.config.cfaV1Address,
         anyAgreementId,
@@ -408,20 +355,6 @@ describe("📣 Factory - Callbacks checks", function() {
       env.mocks.host.address
     );
     let rightError = await f.expectedRevert(
-      env.mocks.host.call_afterAgreementTerminated(
-        app.address,
-        env.tokens.daix.address,
-        env.sf.settings.config.cfaV1Address,
-        anyAgreementId,
-        anyAgreementData,
-        anyCbData,
-        "0x01"
-      ),
-      "InvalidCtx()"
-    );
-    assert.ok(rightError);
-
-    rightError = await f.expectedRevert(
       env.mocks.host.call_afterAgreementTerminated(
         app.address,
         app.address,
