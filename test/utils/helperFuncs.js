@@ -288,10 +288,11 @@ const advTime = async (seconds = 3600) => {
   await network.provider.send("evm_increaseTime", [seconds]);
   await network.provider.send("evm_mine");
 };
-
+//TODO: remove and refactor
 const clip96x32 = (a) => {
   const _a = new BN(a);
-  return _a.shrn(32).shln(32);
+  //return _a.shrn(32).shln(32);
+  return _a;
 };
 
 const toBN = (a) => {
