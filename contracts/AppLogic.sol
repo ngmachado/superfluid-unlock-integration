@@ -124,7 +124,6 @@ contract AppLogic is SuperAppBase, Initializable {
         int96 newFlowRate = _getFlowRateByID(agreementId);
         if(uint96(newFlowRate) < minFlowRate) revert Errors.LowFlowRate();
         int96 clippedNewFlowRate = _clip96x32(newFlowRate);
-        newCtx = ctx; // fallback for the unlikely case of flowrate not changing
         if(clippedNewFlowRate > clippedOldFlowRate) {
             return _increaseFlowBy(clippedNewFlowRate - clippedOldFlowRate, ctx);
         } else {
