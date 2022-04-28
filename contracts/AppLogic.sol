@@ -45,7 +45,6 @@ contract AppLogic is SuperAppBase, Initializable {
         if(_host == address(0)) revert Errors.HostRequired();
         if(_acceptedToken == address(0)) revert Errors.SuperTokenRequired();
         if(_locker == address(0)) revert Errors.LockerRequired();
-        if(_minFlowRate < 2**32) revert Errors.LowFlowRate();
 
         cfaV1Lib = CFAv1Library.InitData(
             ISuperfluid(_host),
@@ -87,13 +86,13 @@ contract AppLogic is SuperAppBase, Initializable {
         (address sender,) = abi.decode(agreementData, (address, address));
         int96 flowRate = _getFlowRateByID(agreementId);
         if(uint96(flowRate) < minFlowRate) revert Errors.LowFlowRate();
-        newCtx = _increaseFlowBy(_clip96x32(flowRate), ctx);
+        newCtx = _increaseFlowBy(flowRate, ctx);
         locker.grantKey(sender, flowRate);
     }
 
     function beforeAgreementUpdated(
-        ISuperToken superToken,
-        address agreementClass,
+        ISuperToken /*superToken*/,
+        address /*agreementClass*/,
         bytes32 agreementId,
         bytes calldata /*agreementData*/,
         bytes calldata /*ctx*/
@@ -102,7 +101,7 @@ contract AppLogic is SuperAppBase, Initializable {
         view
         returns (bytes memory cbdata)
     {
-        return abi.encode(_clip96x32(_getFlowRateByID(agreementId)));
+        return abi.encode(_getFlowRateByID(agreementId));
     }
 
     function afterAgreementUpdated(
@@ -118,14 +117,13 @@ contract AppLogic is SuperAppBase, Initializable {
         onlyExpected(superToken, agreementClass)
         returns (bytes memory newCtx)
     {
-        int96 clippedOldFlowRate = abi.decode(cbdata, (int96));
+        int96 oldFlowRate = abi.decode(cbdata, (int96));
         int96 newFlowRate = _getFlowRateByID(agreementId);
         if(uint96(newFlowRate) < minFlowRate) revert Errors.LowFlowRate();
-        int96 clippedNewFlowRate = _clip96x32(newFlowRate);
-        if(clippedNewFlowRate > clippedOldFlowRate) {
-            return _increaseFlowBy(clippedNewFlowRate - clippedOldFlowRate, ctx);
+        if(newFlowRate > oldFlowRate) {
+            return _increaseFlowBy(newFlowRate - oldFlowRate, ctx);
         } else {
-            return _reduceFlowBy(clippedOldFlowRate - clippedNewFlowRate, ctx);
+            return _reduceFlowBy(oldFlowRate - newFlowRate, ctx);
         }
     }
 
@@ -145,7 +143,7 @@ contract AppLogic is SuperAppBase, Initializable {
         if (!_isSameToken(superToken) || !_isCFAv1(agreementClass) ) {
             return "";
         }
-        return abi.encode(_clip96x32(_getFlowRateByID(agreementId)));
+        return abi.encode(_getFlowRateByID(agreementId));
     }
 
     function afterAgreementTerminated(
@@ -180,12 +178,6 @@ contract AppLogic is SuperAppBase, Initializable {
 
     function _getFlowRateByID(bytes32 agreementId) internal view returns(int96 flowRate) {
         (,flowRate , ,) = cfaV1Lib.cfa.getFlowByID(acceptedToken, agreementId);
-    }
-
-    // reduces the resolution of n to 64 bit, rounding down
-    function _clip96x32(int96 n) internal pure returns(int96 r) {
-        // the right shift throws away the least significant 32 bit, then the left shift fills them with 0
-        r = ((n >> 32) << 32);
     }
 
     // reduce outgoing stream, close stream if needed
