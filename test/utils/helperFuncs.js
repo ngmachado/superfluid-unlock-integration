@@ -78,6 +78,18 @@ const expectNoOutgoingStream = async (env, sender, receiver) => {
   );
 };
 
+const expectZeroBalance = async (env, account) => {
+  const balance = await env.tokens.daix.balanceOf({
+    account: account,
+    providerOrSigner: env.accounts[0],
+  });
+  assert.equal(
+    balance.toString(),
+    "0",
+    `account: ${account} not zero balance`
+  );
+};
+
 const createStreamWithCheck = async (
   env,
   account,
@@ -96,7 +108,7 @@ const createStreamWithCheck = async (
 
   const flowUserToApp = await getFlowRate(env, account.address, receiver);
   const flowAppToLocker = await getFlowRate(env, receiver, lockerAddress);
-  const senderClippedFlow = clip96x32(flowRate);
+  const senderClippedFlow = toBN(flowRate);
   assert.isAtLeast(
     Number(flowAppToLocker.flowRate),
     Number(senderClippedFlow),
@@ -136,7 +148,7 @@ const updateStreamWithCheck = async (
   );
   const flowUserToApp = await getFlowRate(env, account.address, receiver);
   const flowAppToLocker = await getFlowRate(env, receiver, lockerAddress);
-  const senderClippedFlow = clip96x32(flowRate);
+  const senderClippedFlow = toBN(flowRate);
   assert.isAtLeast(
     Number(flowAppToLocker.flowRate),
     Number(senderClippedFlow),
@@ -192,7 +204,7 @@ const deleteStreamWithCheck = async (
   consolePrint = false
 ) => {
   const flowUserToAppBefore = await getFlowRate(env, account.address, receiver);
-  const clippedSenderFlow = clip96x32(flowUserToAppBefore.flowRate);
+  const clippedSenderFlow = toBN(flowUserToAppBefore.flowRate);
   const flowAppToLockerBefore = await getFlowRate(env, receiver, lockerAddress);
   const finalAppToLockerFlow = toBN(flowAppToLockerBefore.flowRate).sub(clippedSenderFlow);
   const deleteFlowOperation = env.sf.cfaV1.deleteFlow({
@@ -305,6 +317,7 @@ module.exports = {
   mintAndUpgrade,
   getFlowRate,
   expectNoOutgoingStream,
+  expectZeroBalance,
   createStreamWithCheck,
   updateStreamWithCheck,
   multiUpdateStreamWithCheck,
