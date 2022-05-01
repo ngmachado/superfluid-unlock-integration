@@ -7,24 +7,28 @@ import {IConstantFlowAgreementV1} from "@superfluid-finance/ethereum-contracts/c
 
 contract LockerMock is ILocker{
 
-    event GrantKey(address indexed account, int96 flowRate);
-    event CancelAndRefund(address indexed account);
+    event GrantKey(address indexed recipient, uint256 expirationTimestamp,  address keyManager);
+    event ExpireAndRefundFor(address indexed keyOwner, uint256 amount);
 
     bool public revertGrantKey;
-    bool public revertCancelAndRefund;
+    bool public revertExpireAndRefundFor;
 
-    function setReverts(bool fgrantKey, bool fcancelAndRefund) external {
+    function setReverts(bool fgrantKey, bool fexpireAndRefundFor) external {
         revertGrantKey = fgrantKey;
-        revertCancelAndRefund = fcancelAndRefund;
+        revertExpireAndRefundFor = fexpireAndRefundFor;
     }
 
-    function grantKey(address account, int96 flowRate) external {
-        require(!revertGrantKey, "grantKey revert");
-        emit GrantKey(account, flowRate);
+    function grantKeys(
+        address[] calldata _recipients,
+        uint[] calldata _expirationTimestamps,
+        address[] calldata _keyManagers
+    ) external {
+        require(!revertGrantKey, "grantKeys revert");
+        emit GrantKey(_recipients[0], _expirationTimestamps[0], _keyManagers[0]);
     }
 
-    function cancelAndRefund(address account) external {
-        require(!revertCancelAndRefund, "cancelAndRefund revert");
-        emit CancelAndRefund(account);
+    function expireAndRefundFor(address _keyOwner, uint amount) external {
+        require(!revertExpireAndRefundFor, "expireAndRefundFor revert");
+        emit ExpireAndRefundFor(_keyOwner, amount);
     }
 }

@@ -87,7 +87,7 @@ contract AppLogic is SuperAppBase, Initializable {
         int96 flowRate = _getFlowRateByID(agreementId);
         if(uint96(flowRate) < minFlowRate) revert Errors.LowFlowRate();
         newCtx = _increaseFlowBy(flowRate, ctx);
-        locker.grantKey(sender, flowRate);
+        locker.grantKeys(_getAddressAsArray(sender), _getUint256AsArray(0), _getAddressAsArray(address(this)));
     }
 
     function beforeAgreementUpdated(
@@ -163,7 +163,7 @@ contract AppLogic is SuperAppBase, Initializable {
         }
         newCtx = _reduceFlowBy(abi.decode(cbdata, (int96)), ctx);
         (address sender,) = abi.decode(agreementData, (address, address));
-        try locker.cancelAndRefund(sender) {
+        try locker.expireAndRefundFor(sender, 0) {
         } catch {
             emit LockerCloseNotificationFailed(address(locker));
         }
@@ -208,5 +208,17 @@ contract AppLogic is SuperAppBase, Initializable {
 
     function _isCFAv1(address agreementClass) private view returns (bool) {
         return ISuperAgreement(agreementClass).agreementType() == CFA_ID;
+    }
+
+    function _getAddressAsArray(address addr) private pure returns(address[] memory) {
+        address[] memory arr = new address[](1);
+        arr[0] = addr;
+        return arr;
+    }
+
+    function _getUint256AsArray(uint256 num) private pure returns(uint256[] memory) {
+        uint256[] memory arr = new uint256[](1);
+        arr[0] = num;
+        return arr;
     }
 }
