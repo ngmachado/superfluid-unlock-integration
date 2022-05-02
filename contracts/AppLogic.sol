@@ -172,6 +172,14 @@ contract AppLogic is SuperAppBase, Initializable {
         // which could cause the App to be jailed if exhausting the SF callback gas limit
     }
 
+    /// Fallback in case locker.expireAndRefund() failed in the termination callback
+    function expireAndRefundFor(address sender) external {
+        (, int96 flowRateToLocker , ,) = cfaV1Lib.cfa.getFlow(acceptedToken, sender, address(this));
+        if(flowRateToLocker == 0) {
+            locker.expireAndRefundFor(sender, 0);
+        }
+    }
+
     /**************************************************************************
      * Internal helper functions
      *************************************************************************/
@@ -184,7 +192,7 @@ contract AppLogic is SuperAppBase, Initializable {
     function _reduceFlowBy(int96 amount, bytes memory ctx) internal returns(bytes memory newCtx) {
         (, int96 flowRateToLocker , ,) = cfaV1Lib.cfa.getFlow(acceptedToken, address(this), address(locker));
         int96 newFlowRate = flowRateToLocker - amount;
-        if(newFlowRate <= 0) { // can become negative due to clipping artifacts
+        if(newFlowRate <= 0) {
             return cfaV1Lib.deleteFlowWithCtx(ctx, address(this), address(locker), acceptedToken);
         } else {
             return cfaV1Lib.updateFlowWithCtx(ctx, address(locker), acceptedToken, newFlowRate);
