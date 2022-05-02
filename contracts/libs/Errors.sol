@@ -2,7 +2,6 @@
 pragma solidity 0.8.13;
 
 library Errors {
-    error NotOwner();
     error NotHost();
     error NotCFAv1();
     error NotSuperToken();

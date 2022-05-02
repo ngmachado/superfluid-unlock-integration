@@ -71,21 +71,6 @@ describe("⏬ Factory - Deployments", function () {
     );
     assert.ok(rightError);
   });
-  it("#1.3 - revert of not owner of factory", async () => {
-    const locker = await env.factories.locker.deploy();
-    const rightError = await f.expectedRevert(
-      f.deployNewClone(
-        env,
-        env.tokens.daix.address,
-        locker.address,
-        MIN_FLOWRATE,
-        env.sf.settings.config.hostAddress,
-        env.accounts[1]
-      ),
-      "NotOwner()"
-    );
-    assert.ok(rightError);
-  });
 });
 
 describe("📣 Factory - Callbacks checks", function() {
