@@ -87,7 +87,7 @@ contract AppLogic is SuperAppBase, Initializable {
         int96 flowRate = _getFlowRateByID(agreementId);
         if(uint96(flowRate) < minFlowRate) revert Errors.LowFlowRate();
         newCtx = _increaseFlowBy(flowRate, ctx);
-        locker.grantKeys(_getAddressAsArray(sender), _getUint256AsArray(0), _getAddressAsArray(address(this)));
+        locker.grantKeys(_getAddressAsArray(sender), _getUint256AsArray(type(uint256).max), _getAddressAsArray(address(this)));
     }
 
     function beforeAgreementUpdated(
