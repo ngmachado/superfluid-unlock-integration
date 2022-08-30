@@ -35,7 +35,6 @@ contract AppLogic is SuperAppBase, Initializable {
 
     function initialize(
         address _host,
-        address _acceptedToken,
         address _locker,
         uint96 _minFlowRate
     )
@@ -43,7 +42,6 @@ contract AppLogic is SuperAppBase, Initializable {
         initializer
     {
         if(_host == address(0)) revert Errors.HostRequired();
-        if(_acceptedToken == address(0)) revert Errors.SuperTokenRequired();
         if(_locker == address(0)) revert Errors.LockerRequired();
 
         cfaV1Lib = CFAv1Library.InitData(
@@ -53,8 +51,8 @@ contract AppLogic is SuperAppBase, Initializable {
             )
         );
         
-        acceptedToken = ISuperToken(_acceptedToken);
         locker = ILocker(_locker);
+        acceptedToken = ISuperToken(locker.tokenAddress);
         minFlowRate = _minFlowRate;
     }
 
