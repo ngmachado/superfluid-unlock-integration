@@ -13,13 +13,14 @@ contract CloneFactory {
     SuperAppDefinitions.BEFORE_AGREEMENT_CREATED_NOOP;
 
     AppLogic public appLogicImplementation;
+    address private immutable host;
 
-    constructor(AppLogic _appLogicImplementation) {
+    constructor(AppLogic _appLogicImplementation, address _host) {
         appLogicImplementation = _appLogicImplementation;
+        host = _host;
     }
 
     function deployNewApp(
-        address host,
         address acceptedToken,
         address locker,
         uint96 minFlowRate
