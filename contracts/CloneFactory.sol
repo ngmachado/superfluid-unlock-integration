@@ -7,7 +7,7 @@ import {AppLogic} from "./AppLogic.sol";
 
 contract CloneFactory {
 
-    event NewAppLogic(address indexed newApp, address host, address indexed locker, uint96 minFlowRate);
+    event NewAppLogic(address indexed newApp, address host, address indexed locker);
 
     uint256 immutable configWord = SuperAppDefinitions.APP_LEVEL_FINAL |
     SuperAppDefinitions.BEFORE_AGREEMENT_CREATED_NOOP;
@@ -21,16 +21,15 @@ contract CloneFactory {
     }
 
     function deployNewApp(
-        address locker,
-        uint96 minFlowRate
+        address locker
     )
         external
         returns(address)
     {
         address newAppClone = Clones.clone(address(appLogicImplementation));
-        AppLogic(newAppClone).initialize(host, locker, minFlowRate);
+        AppLogic(newAppClone).initialize(host, locker);
         ISuperfluid(host).registerAppByFactory(ISuperApp(newAppClone), configWord);
-        emit NewAppLogic(newAppClone, host, locker, minFlowRate);
+        emit NewAppLogic(newAppClone, host, locker);
         return newAppClone;
     }
 

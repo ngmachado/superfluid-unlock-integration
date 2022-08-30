@@ -36,7 +36,6 @@ contract AppLogic is SuperAppBase, Initializable {
     function initialize(
         address _host,
         address _locker,
-        uint96 _minFlowRate
     )
         external
         initializer
@@ -53,7 +52,12 @@ contract AppLogic is SuperAppBase, Initializable {
         
         locker = ILocker(_locker);
         acceptedToken = ISuperToken(locker.tokenAddress);
-        minFlowRate = _minFlowRate;
+        syncPrice();
+    }
+
+    // calculating minFlowRate based on lock price divided by duration
+    function syncPrice() public {
+        minFlowRate = locker.keyPrice / locker.expirationDuration; 
     }
 
     // tranfers all tokens held by this contract (this is just a fallback, usually not needed)
