@@ -6,6 +6,8 @@ import "../AppLogic.sol";
 
 contract HostMock {
 
+    ISuperAgreement public _mockCFA1;
+
     function call_afterAgreementCreated(
         AppLogic app,
         ISuperToken superToken,
@@ -118,7 +120,12 @@ contract HostMock {
     function registerAppByFactory(ISuperApp app, uint256 configWord) external pure {
     }
 
-    function getAgreementClass(bytes32 /*agreementType*/) external pure returns(ISuperAgreement agreementClass) {
-        return ISuperAgreement(address(0));
+
+    function setCFA1(address _cfaAddress) external {
+        _mockCFA1 = ISuperAgreement(_cfaAddress);
+    }
+
+    function getAgreementClass(bytes32 /*agreementType*/) external view returns(ISuperAgreement agreementClass) {
+        return _mockCFA1;
     }
 }

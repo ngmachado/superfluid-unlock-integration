@@ -13,9 +13,19 @@ contract LockerMock is ILocker{
     bool public revertGrantKey;
     bool public revertExpireAndRefundFor;
 
+    uint256 public expirationDuration;
+    uint256 public keyPrice;
+    address public tokenAddress;
+
     function setReverts(bool fgrantKey, bool fexpireAndRefundFor) external {
         revertGrantKey = fgrantKey;
         revertExpireAndRefundFor = fexpireAndRefundFor;
+    }
+
+    function setState(uint256 _expirationDuration, uint256 _keyPrice, address _tokenAddress) external {
+        expirationDuration = _expirationDuration;
+        keyPrice = _keyPrice;
+        tokenAddress = _tokenAddress;
     }
 
     function grantKeys(

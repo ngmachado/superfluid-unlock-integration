@@ -9,4 +9,5 @@ library Errors {
     error SuperTokenRequired();
     error LockerRequired();
     error LowFlowRate();
+    error SafeCast();
 }

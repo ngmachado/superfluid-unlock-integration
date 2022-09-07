@@ -20,12 +20,7 @@ contract CloneFactory {
         host = _host;
     }
 
-    function deployNewApp(
-        address locker
-    )
-        external
-        returns(address)
-    {
+    function deployNewApp(address locker) external returns(address) {
         address newAppClone = Clones.clone(address(appLogicImplementation));
         AppLogic(newAppClone).initialize(host, locker);
         ISuperfluid(host).registerAppByFactory(ISuperApp(newAppClone), configWord);

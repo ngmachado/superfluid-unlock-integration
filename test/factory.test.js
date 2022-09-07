@@ -19,53 +19,22 @@ before(async function () {
 describe("⏬ Factory - Deployments", function () {
   it("#1.1 - deploy app from Factory", async () => {
     const locker = await env.factories.locker.deploy();
-    let rightError = await f.expectedRevert(
-      f.deployNewClone(
-        env,
-        env.tokens.daix.address,
-        locker.address,
-        MIN_FLOWRATE,
-        ZERO_ADDRESS
-      ),
-      "HostRequired()"
-    );
-    assert.ok(rightError);
-    rightError = await f.expectedRevert(
-      f.deployNewClone(env, ZERO_ADDRESS, locker.address, MIN_FLOWRATE),
-      "SuperTokenRequired()"
-    );
-    assert.ok(rightError);
-    rightError = await f.expectedRevert(
-      f.deployNewClone(
-        env,
-        env.tokens.daix.address,
-        ZERO_ADDRESS,
-        MIN_FLOWRATE
-      ),
-      "LockerRequired()"
-    );
-    assert.ok(rightError);
-    await f.deployNewClone(
+    const { app } = await f.deployNewClone(
       env,
-      env.tokens.daix.address,
-      locker.address,
-      MIN_FLOWRATE
+      locker.address
     );
+    assert.ok(app.address !== undefined);
   });
   it("#1.2 - deploy app and re-run initialize", async () => {
     const locker = await env.factories.locker.deploy();
     const { app } = await f.deployNewClone(
       env,
-      env.tokens.daix.address,
-      locker.address,
-      MIN_FLOWRATE
+      locker.address
     );
     const rightError = await f.expectedRevert(
       app.initialize(
         env.sf.settings.config.hostAddress,
-        env.tokens.daix.address,
-        locker.address,
-        MIN_FLOWRATE
+        locker.address
       ),
       "Initializable: contract is already initialized"
     );
@@ -78,9 +47,7 @@ describe("📣 Factory - Callbacks checks", function() {
     const locker = await env.factories.locker.deploy();
     const { app } = await f.deployNewClone(
       env,
-      env.tokens.daix.address,
-      locker.address,
-      MIN_FLOWRATE
+      locker.address
     );
     const rightError = await f.expectedRevert(
       env.mocks.host.call_afterAgreementCreated(
@@ -98,13 +65,8 @@ describe("📣 Factory - Callbacks checks", function() {
   });
   it("#2.2 - Callback with wrong data (afterAgreementCreated)", async () => {
     const locker = await env.factories.locker.deploy();
-    const { app } = await f.deployNewClone(
-      env,
-      env.tokens.daix.address,
-      locker.address,
-      MIN_FLOWRATE,
-      env.mocks.host.address
-    );
+    await locker.setState(0, 0, env.tokens.daix.address);
+    const { app } = await f.deployNewCloneWithMockHost(env, locker.address);
     let rightError = await f.expectedRevert(
       env.mocks.host.call_afterAgreementCreated(
         app.address,
@@ -115,7 +77,7 @@ describe("📣 Factory - Callbacks checks", function() {
         anyCbData,
         anyCtx
       ),
-      "NotSuperToken()"
+      "NotSuperToken()",
     );
     assert.ok(rightError);
     rightError = await f.expectedRevert(
@@ -136,9 +98,7 @@ describe("📣 Factory - Callbacks checks", function() {
     const locker = await env.factories.locker.deploy();
     const { app } = await f.deployNewClone(
       env,
-      env.tokens.daix.address,
-      locker.address,
-      MIN_FLOWRATE
+      locker.address
     );
     const rightError = await f.expectedRevert(
       env.mocks.host.call_afterAgreementUpdated(
@@ -156,13 +116,8 @@ describe("📣 Factory - Callbacks checks", function() {
   });
   it("#2.6 - Callback with wrong data (afterAgreementUpdated)", async () => {
     const locker = await env.factories.locker.deploy();
-    const { app } = await f.deployNewClone(
-      env,
-      env.tokens.daix.address,
-      locker.address,
-      MIN_FLOWRATE,
-      env.mocks.host.address
-    );
+    await locker.setState(0, 0, env.tokens.daix.address);
+    const { app } = await f.deployNewCloneWithMockHost(env, locker.address);
     let rightError = await f.expectedRevert(
       env.mocks.host.call_afterAgreementUpdated(
         app.address,
@@ -195,9 +150,7 @@ describe("📣 Factory - Callbacks checks", function() {
     const locker = await env.factories.locker.deploy();
     const { app } = await f.deployNewClone(
       env,
-      env.tokens.daix.address,
-      locker.address,
-      MIN_FLOWRATE
+      locker.address
     );
     const rightError = await f.expectedRevert(
       env.mocks.host.call_beforeAgreementTerminated(
@@ -214,13 +167,8 @@ describe("📣 Factory - Callbacks checks", function() {
   });
   it("#2.8 - Callback with wrong data (beforeAgreementTerminated)", async () => {
     const locker = await env.factories.locker.deploy();
-    const { app } = await f.deployNewClone(
-      env,
-      env.tokens.daix.address,
-      locker.address,
-      MIN_FLOWRATE,
-      env.mocks.host.address
-    );
+    await locker.setState(0, 0, env.tokens.daix.address);
+    const { app } = await f.deployNewCloneWithMockHost(env, locker.address);
     let rightError = await f.expectedRevert(
       env.mocks.host.call_beforeAgreementTerminated(
         app.address,
@@ -251,9 +199,7 @@ describe("📣 Factory - Callbacks checks", function() {
     const locker = await env.factories.locker.deploy();
     const { app } = await f.deployNewClone(
       env,
-      env.tokens.daix.address,
-      locker.address,
-      MIN_FLOWRATE
+      locker.address
     );
     const rightError = await f.expectedRevert(
       env.mocks.host.call_afterAgreementTerminated(
@@ -271,13 +217,8 @@ describe("📣 Factory - Callbacks checks", function() {
   });
   it("#2.10 - Callback with wrong data (afterAgreementTerminated)", async () => {
     const locker = await env.factories.locker.deploy();
-    const { app } = await f.deployNewClone(
-      env,
-      env.tokens.daix.address,
-      locker.address,
-      MIN_FLOWRATE,
-      env.mocks.host.address
-    );
+    await locker.setState(0, 0, env.tokens.daix.address);
+    const { app } = await f.deployNewCloneWithMockHost(env, locker.address);
     let rightError = await f.expectedRevert(
       env.mocks.host.call_afterAgreementTerminated(
         app.address,

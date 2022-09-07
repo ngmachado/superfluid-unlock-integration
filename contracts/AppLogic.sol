@@ -16,7 +16,7 @@ contract AppLogic is SuperAppBase, Initializable {
 
     CFAv1Library.InitData public cfaV1Lib;
     ISuperToken public acceptedToken;
-    uint96 public minFlowRate;
+    int96 public minFlowRate;
     ILocker public locker;
     bytes32 constant public CFA_ID = keccak256("org.superfluid-finance.agreements.ConstantFlowAgreement.v1");
 
@@ -35,7 +35,7 @@ contract AppLogic is SuperAppBase, Initializable {
 
     function initialize(
         address _host,
-        address _locker,
+        address _locker
     )
         external
         initializer
@@ -51,13 +51,15 @@ contract AppLogic is SuperAppBase, Initializable {
         );
         
         locker = ILocker(_locker);
-        acceptedToken = ISuperToken(locker.tokenAddress);
+        acceptedToken = ISuperToken(locker.tokenAddress());
         syncPrice();
     }
 
     // calculating minFlowRate based on lock price divided by duration
     function syncPrice() public {
-        minFlowRate = locker.keyPrice / locker.expirationDuration; 
+        int96 keyPrice = toInt96(locker.keyPrice());
+        uint256 expirationDuration = locker.expirationDuration();
+        minFlowRate = expirationDuration > 0 ? keyPrice / toInt96(expirationDuration) : keyPrice;
     }
 
     // tranfers all tokens held by this contract (this is just a fallback, usually not needed)
@@ -87,7 +89,7 @@ contract AppLogic is SuperAppBase, Initializable {
     {
         (address sender,) = abi.decode(agreementData, (address, address));
         int96 flowRate = _getFlowRateByID(agreementId);
-        if(uint96(flowRate) < minFlowRate) revert Errors.LowFlowRate();
+        if(flowRate < minFlowRate) revert Errors.LowFlowRate();
         newCtx = _increaseFlowBy(flowRate, ctx);
         locker.grantKeys(_getAddressAsArray(sender), _getUint256AsArray(type(uint256).max), _getAddressAsArray(address(this)));
     }
@@ -121,7 +123,7 @@ contract AppLogic is SuperAppBase, Initializable {
     {
         int96 oldFlowRate = abi.decode(cbdata, (int96));
         int96 newFlowRate = _getFlowRateByID(agreementId);
-        if(uint96(newFlowRate) < minFlowRate) revert Errors.LowFlowRate();
+        if(newFlowRate < minFlowRate) revert Errors.LowFlowRate();
         if(newFlowRate > oldFlowRate) {
             return _increaseFlowBy(newFlowRate - oldFlowRate, ctx);
         } else {
@@ -230,5 +232,10 @@ contract AppLogic is SuperAppBase, Initializable {
         uint256[] memory arr = new uint256[](1);
         arr[0] = num;
         return arr;
+    }
+
+    function toInt96(uint256 value) internal pure returns (int96) {
+        if(value > uint256(int256(type(int96).max))) revert Errors.SafeCast();
+        return int96(int256(value));
     }
 }

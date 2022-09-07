@@ -23,15 +23,12 @@ const expectedRevert = async (
 
 const deployNewClone = async (
   env,
-  superTokenAddress,
   lockerAddress,
-  minFlow,
-  host = env.sf.settings.config.hostAddress,
   owner = env.defaultDeployer
 ) => {
   const tx = await env.factories.clone
     .connect(owner)
-    .deployNewApp(host, superTokenAddress, lockerAddress, minFlow);
+    .deployNewApp(lockerAddress);
   const rc = await tx.wait();
   const event = rc.events.find((event) => event.event === "NewAppLogic");
   return {
@@ -39,9 +36,27 @@ const deployNewClone = async (
     event: {
       newApp: event.args.newApp,
       host: event.args.host,
-      acceptedToken: event.args.acceptedToken,
       locker: event.args.locker,
-      minFlowRate: event.args.minFlowRate,
+    },
+  };
+};
+
+const deployNewCloneWithMockHost = async (
+    env,
+    lockerAddress,
+    owner = env.defaultDeployer
+) => {
+  const tx = await env.mocks.clone
+      .connect(owner)
+      .deployNewApp(lockerAddress);
+  const rc = await tx.wait();
+  const event = rc.events.find((event) => event.event === "NewAppLogic");
+  return {
+    app: new ethers.Contract(event.args.newApp, AppLogicABI.abi, owner),
+    event: {
+      newApp: event.args.newApp,
+      host: event.args.host,
+      locker: event.args.locker,
     },
   };
 };
@@ -314,6 +329,7 @@ const toBN = (a) => {
 module.exports = {
   expectedRevert,
   deployNewClone,
+  deployNewCloneWithMockHost,
   mintAndUpgrade,
   getFlowRate,
   expectNoOutgoingStream,

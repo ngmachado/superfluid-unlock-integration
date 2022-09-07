@@ -68,7 +68,8 @@ const deployTestEnv = async () => {
     accounts[0]
   );
   const cloneFactory = await _cloneFactory.deploy(
-    _appLogicImplementation.address
+    _appLogicImplementation.address,
+    host.address,
   );
   const lockerFactory = await ethers.getContractFactory(
     "LockerMock",
@@ -81,6 +82,13 @@ const deployTestEnv = async () => {
     accounts[0]
   );
   const mockCFAv1 = await _CFAV1Factory.deploy();
+  await mockHost.setCFA1(mockCFAv1.address);
+
+  const mockCloneFactory = await _cloneFactory.deploy(
+      _appLogicImplementation.address,
+      mockHost.address,
+  );
+
   await superfluid.authorizeAppFactory(
     sf.settings.config.hostAddress,
     cloneFactory.address
@@ -103,6 +111,7 @@ const deployTestEnv = async () => {
     mocks: {
       host: mockHost,
       cfa: mockCFAv1,
+      clone: mockCloneFactory
     }
   }
 };
